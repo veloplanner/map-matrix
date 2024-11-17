@@ -28,7 +28,6 @@ export function useMapHash(mapState: MapState): MapState | null {
   const [initialState] = useState(parseHash);
 
   function onHashChange(newState: MapState) {
-    console.log("throttledUpdateHash");
     const newHash = formatHash(newState);
     if (window.location.hash !== newHash) {
       window.location.hash = newHash;
