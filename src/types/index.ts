@@ -1,3 +1,15 @@
+import { MAP_SOURCES } from "../constants/mapSources";
+
+export type NewSourceFormData = {
+  name: string;
+  type: "vector" | "raster";
+  style?: string; // for vector sources
+  url?: string; // for raster sources
+  attribution?: string;
+};
+
+export type MapSourceId = keyof typeof MAP_SOURCES | string;
+
 export type BoxCount = 1 | 2 | 3 | 4 | 5 | 6;
 
 export interface AppState {
@@ -7,6 +19,7 @@ export interface AppState {
   };
   panels: Panel[];
   mapState: MapState;
+  customSources: Record<string, MapSource>;
 }
 
 export interface Panel {

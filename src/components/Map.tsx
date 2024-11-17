@@ -1,6 +1,7 @@
 import { Map as MapGL, ViewStateChangeEvent } from "@vis.gl/react-maplibre";
 import { MapState } from "../types";
 import { MAP_SOURCES } from "../constants/mapSources";
+import { useApp } from "../contexts/AppContext";
 
 interface MapProps {
   mapState: MapState;
@@ -17,7 +18,8 @@ export function Map({
   onMapChange,
   onViewStateChange,
 }: MapProps) {
-  const source = MAP_SOURCES[sourceId];
+  const { state } = useApp();
+  const source = MAP_SOURCES[sourceId] || state.customSources[sourceId];
 
   function handleMove(evt: ViewStateChangeEvent) {
     const newState: Partial<MapState> = {
@@ -33,7 +35,6 @@ export function Map({
     if (synchronized) {
       onMapChange(newState);
     } else {
-      // setLocalMapState((prev) => ({ ...prev, ...newState }));
       onViewStateChange(newState);
     }
   }

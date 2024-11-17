@@ -10,26 +10,37 @@ export function SourceSelector({
   panelId,
   currentSourceId,
 }: SourceSelectorProps) {
-  const { dispatch } = useApp();
-
-  function handleSourceChange(sourceId: string) {
-    dispatch({
-      type: "UPDATE_PANEL_SOURCE",
-      payload: { panelId, sourceId },
-    });
-  }
+  const { state, dispatch } = useApp();
 
   return (
-    <select
-      value={currentSourceId}
-      onChange={(e) => handleSourceChange(e.target.value)}
-      className="text-sm border border-slate-200 rounded px-2 py-1 bg-white hover:bg-slate-50"
-    >
-      {Object.values(MAP_SOURCES).map((source) => (
-        <option key={source.id} value={source.id}>
-          {source.name}
-        </option>
-      ))}
-    </select>
+    <div className="flex items-center gap-2">
+      <select
+        value={currentSourceId}
+        onChange={(e) =>
+          dispatch({
+            type: "UPDATE_PANEL_SOURCE",
+            payload: { panelId, sourceId: e.target.value },
+          })
+        }
+        className="text-sm border border-slate-200 rounded px-2 py-1 bg-white hover:bg-slate-50"
+      >
+        <optgroup label="Built-in Sources">
+          {Object.values(MAP_SOURCES).map((source) => (
+            <option key={source.id} value={source.id}>
+              {source.name}
+            </option>
+          ))}
+        </optgroup>
+        {Object.keys(state.customSources).length > 0 && (
+          <optgroup label="Custom Sources">
+            {Object.values(state.customSources).map((source) => (
+              <option key={source.id} value={source.id}>
+                {source.name}
+              </option>
+            ))}
+          </optgroup>
+        )}
+      </select>
+    </div>
   );
 }

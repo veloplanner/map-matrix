@@ -1,7 +1,7 @@
 import { createContext, ReactNode, useCallback, useContext } from "react";
 import { DEFAULT_SOURCE_ID, MAP_SOURCES } from "../constants/mapSources";
 import { useLocalStorage } from "../hooks/useLocalStorage";
-import { AppState, BoxCount, MapState } from "../types";
+import { AppState, BoxCount, MapSource, MapState } from "../types";
 
 function getInitialPanels() {
   // Get available source IDs excluding the default one
@@ -39,6 +39,7 @@ const initialState: AppState = {
   },
   panels: getInitialPanels(),
   mapState: initialMapState,
+  customSources: {},
 };
 
 const STORAGE_KEY = "mapmatrix-state";
@@ -55,7 +56,8 @@ type Action =
   | {
       type: "UPDATE_PANEL_LOCAL_STATE";
       payload: { panelId: string; mapState: MapState };
-    };
+    }
+  | { type: "ADD_CUSTOM_SOURCE"; payload: { id: string; source: MapSource } };
 
 function appReducer(state: AppState, action: Action): AppState {
   switch (action.type) {
@@ -151,6 +153,15 @@ function appReducer(state: AppState, action: Action): AppState {
             ? { ...panel, localMapState: action.payload.mapState }
             : panel
         ),
+      };
+
+    case "ADD_CUSTOM_SOURCE":
+      return {
+        ...state,
+        customSources: {
+          ...state.customSources,
+          [action.payload.id]: action.payload.source,
+        },
       };
 
     default:
