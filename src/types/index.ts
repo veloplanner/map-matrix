@@ -14,6 +14,7 @@ export interface Panel {
   sourceId: string;
   position: number;
   synchronized: boolean;
+  localMapState?: MapState; // For unsynchronized panels
 }
 
 export interface MapState {

@@ -51,7 +51,11 @@ type Action =
       type: "UPDATE_PANEL_SOURCE";
       payload: { panelId: string; sourceId: string };
     }
-  | { type: "TOGGLE_PANEL_SYNC"; payload: { panelId: string } };
+  | { type: "TOGGLE_PANEL_SYNC"; payload: { panelId: string } }
+  | {
+      type: "UPDATE_PANEL_LOCAL_STATE";
+      payload: { panelId: string; mapState: MapState };
+    };
 
 function appReducer(state: AppState, action: Action): AppState {
   switch (action.type) {
@@ -130,6 +134,16 @@ function appReducer(state: AppState, action: Action): AppState {
         panels: state.panels.map((panel) =>
           panel.id === action.payload.panelId
             ? { ...panel, synchronized: !panel.synchronized }
+            : panel
+        ),
+      };
+
+    case "UPDATE_PANEL_LOCAL_STATE":
+      return {
+        ...state,
+        panels: state.panels.map((panel) =>
+          panel.id === action.payload.panelId
+            ? { ...panel, localMapState: action.payload.mapState }
             : panel
         ),
       };

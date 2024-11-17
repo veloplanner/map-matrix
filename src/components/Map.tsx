@@ -8,6 +8,7 @@ interface MapProps {
   sourceId: string;
   synchronized: boolean;
   onMapChange: (state: Partial<MapState>) => void;
+  onViewStateChange?: (state: Partial<MapState>) => void;
 }
 
 export function Map({
@@ -15,6 +16,7 @@ export function Map({
   sourceId,
   synchronized,
   onMapChange,
+  onViewStateChange,
 }: MapProps) {
   const [localMapState, setLocalMapState] = useState<MapState>(globalMapState);
 
@@ -36,6 +38,7 @@ export function Map({
       onMapChange(newState);
     } else {
       setLocalMapState((prev) => ({ ...prev, ...newState }));
+      onViewStateChange?.(newState);
     }
   }
 
