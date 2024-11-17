@@ -73,7 +73,7 @@ export function MapPanel({ panel, className }: MapPanelProps) {
       </div>
       <div className="flex-1">
         <Map
-          mapState={state.mapState}
+          mapState={effectiveMapState}
           sourceId={panel.sourceId}
           synchronized={panel.synchronized}
           onMapChange={handleMapChange}

@@ -128,15 +128,20 @@ function appReducer(state: AppState, action: Action): AppState {
       };
     }
 
-    case "TOGGLE_PANEL_SYNC":
+    case "TOGGLE_PANEL_SYNC": {
       return {
         ...state,
         panels: state.panels.map((panel) =>
           panel.id === action.payload.panelId
-            ? { ...panel, synchronized: !panel.synchronized }
+            ? {
+                ...panel,
+                synchronized: !panel.synchronized,
+                localMapState: state.mapState,
+              }
             : panel
         ),
       };
+    }
 
     case "UPDATE_PANEL_LOCAL_STATE":
       return {

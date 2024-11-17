@@ -1,5 +1,4 @@
 import { Map as MapGL, ViewStateChangeEvent } from "@vis.gl/react-maplibre";
-import { useState } from "react";
 import { MapState } from "../types";
 import { MAP_SOURCES } from "../constants/mapSources";
 
@@ -8,20 +7,17 @@ interface MapProps {
   sourceId: string;
   synchronized: boolean;
   onMapChange: (state: Partial<MapState>) => void;
-  onViewStateChange?: (state: Partial<MapState>) => void;
+  onViewStateChange: (state: Partial<MapState>) => void;
 }
 
 export function Map({
-  mapState: globalMapState,
+  mapState: effectiveMapState,
   sourceId,
   synchronized,
   onMapChange,
   onViewStateChange,
 }: MapProps) {
-  const [localMapState, setLocalMapState] = useState<MapState>(globalMapState);
-
   const source = MAP_SOURCES[sourceId];
-  const effectiveMapState = synchronized ? globalMapState : localMapState;
 
   function handleMove(evt: ViewStateChangeEvent) {
     const newState: Partial<MapState> = {
@@ -37,8 +33,8 @@ export function Map({
     if (synchronized) {
       onMapChange(newState);
     } else {
-      setLocalMapState((prev) => ({ ...prev, ...newState }));
-      onViewStateChange?.(newState);
+      // setLocalMapState((prev) => ({ ...prev, ...newState }));
+      onViewStateChange(newState);
     }
   }
 
