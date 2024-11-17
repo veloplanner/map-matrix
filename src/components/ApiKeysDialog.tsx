@@ -68,6 +68,7 @@ export function ApiKeysDialog({ onClose }: ApiKeysDialogProps) {
               Google Maps API Key
               <input
                 type="password"
+                autoComplete="off"
                 value={googleMapsKey}
                 onChange={(e) => setGoogleMapsKey(e.target.value)}
                 className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-2"

@@ -4,8 +4,9 @@ import {
   Layer,
   Source,
 } from "@vis.gl/react-maplibre";
+import { Map as GoogleMap, APIProvider } from "@vis.gl/react-google-maps";
 import { MapState } from "../types";
-import { MAP_SOURCES } from "../constants/mapSources";
+import { GOOGLE_SOURCES, MAP_SOURCES } from "../constants/mapSources";
 import { useApp } from "../contexts/AppContext";
 import { SourceSpecification } from "maplibre-gl";
 import { MapContextMenu } from "./MapContextMenu";
@@ -35,7 +36,10 @@ export function Map({
   onViewStateChange,
 }: MapProps) {
   const { state } = useApp();
-  const source = MAP_SOURCES[sourceId] || state.customSources[sourceId];
+  const source =
+    MAP_SOURCES[sourceId] ||
+    state.customSources[sourceId] ||
+    GOOGLE_SOURCES[sourceId];
   const [contextMenu, setContextMenu] = useState<ContextMenuState>({
     show: false,
     x: 0,
@@ -76,6 +80,50 @@ export function Map({
       lat: lat,
       lng: lng,
     });
+  }
+
+  // Handle Google Maps source
+  if (source.type === "google") {
+    if (!state.apiKeys?.googleMaps) {
+      return (
+        <div className="flex items-center justify-center w-full h-full">
+          Google Maps API key is required
+        </div>
+      );
+    }
+
+    return (
+      <APIProvider apiKey={state.apiKeys.googleMaps}>
+        <div className="relative w-full h-full">
+          <GoogleMap
+            disableDefaultUI={true}
+            center={{
+              lat: effectiveMapState.center[1],
+              lng: effectiveMapState.center[0],
+            }}
+            zoom={effectiveMapState.zoom}
+            mapTypeId={source.mapType}
+            heading={effectiveMapState.bearing}
+            tilt={effectiveMapState.pitch}
+            gestureHandling="greedy"
+            onCameraChanged={({ detail: { center, zoom, heading, tilt } }) => {
+              const newState: Partial<MapState> = {
+                center: [center.lng, center.lat],
+                zoom,
+                bearing: heading ?? effectiveMapState.bearing,
+                pitch: tilt ?? effectiveMapState.pitch,
+              };
+
+              if (synchronized) {
+                onMapChange(newState);
+              } else {
+                onViewStateChange(newState);
+              }
+            }}
+          />
+        </div>
+      </APIProvider>
+    );
   }
 
   if (source.type === "raster") {
@@ -147,20 +195,20 @@ export function Map({
     );
   }
 
-  return (
-    <div className="relative w-full h-full">
-      <MapGL
-        style={{ width: "100%", height: "100%" }}
-        maxZoom={20}
-        onMove={handleMove}
-        onContextMenu={handleContextMenu}
-        {...effectiveMapState}
-        longitude={effectiveMapState.center[0]}
-        latitude={effectiveMapState.center[1]}
-        mapStyle={source.style}
-      >
-        {source.type === "vector" &&
-          source.overlays?.map((overlay) => (
+  if (source.type === "vector") {
+    return (
+      <div className="relative w-full h-full">
+        <MapGL
+          style={{ width: "100%", height: "100%" }}
+          maxZoom={20}
+          onMove={handleMove}
+          onContextMenu={handleContextMenu}
+          {...effectiveMapState}
+          longitude={effectiveMapState.center[0]}
+          latitude={effectiveMapState.center[1]}
+          mapStyle={source.style}
+        >
+          {source.overlays?.map((overlay) => (
             <Source
               key={overlay.sourceId}
               id={overlay.sourceId}
@@ -172,17 +220,26 @@ export function Map({
               ))}
             </Source>
           ))}
-        {contextMenu.show && (
-          <MapContextMenu
-            x={contextMenu.x}
-            y={contextMenu.y}
-            lat={contextMenu.lat}
-            lng={contextMenu.lng}
-            zoom={effectiveMapState.zoom}
-            onClose={() => setContextMenu((prev) => ({ ...prev, show: false }))}
-          />
-        )}
-      </MapGL>
+          {contextMenu.show && (
+            <MapContextMenu
+              x={contextMenu.x}
+              y={contextMenu.y}
+              lat={contextMenu.lat}
+              lng={contextMenu.lng}
+              zoom={effectiveMapState.zoom}
+              onClose={() =>
+                setContextMenu((prev) => ({ ...prev, show: false }))
+              }
+            />
+          )}
+        </MapGL>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex items-center justify-center w-full h-full">
+      Unknown source type
     </div>
   );
 }
