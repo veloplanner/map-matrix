@@ -8,24 +8,13 @@ export function Layout() {
   const { boxCount } = state.layout;
   const layout = GRID_LAYOUTS[boxCount];
 
-  const gridStyle = {
-    gridTemplateAreas: `"${layout.areas.join('" "')}"`,
-  };
-
   return (
     <div className="h-screen flex flex-col">
       <Navbar />
       <main className="flex-1 p-4 bg-slate-100">
-        <div
-          className={`grid gap-4 h-full ${layout.cols} ${layout.rows}`}
-          style={gridStyle}
-        >
-          {state.panels.map((panel, index) => (
-            <MapPanel
-              key={panel.id}
-              panel={panel}
-              className={`grid-in-${layout.areas[index].trim()}`}
-            />
+        <div className={`grid gap-4 h-full ${layout.cols} ${layout.rows}`}>
+          {state.panels.map((panel) => (
+            <MapPanel key={panel.id} panel={panel} />
           ))}
         </div>
       </main>

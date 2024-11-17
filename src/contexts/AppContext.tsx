@@ -1,29 +1,45 @@
 import { createContext, useContext, useReducer, ReactNode } from "react";
-import { AppState, BoxCount, MapState } from "../types";
-import { DEFAULT_SOURCE_ID } from "../constants/mapSources";
+import { AppState, MapState, BoxCount } from "../types";
+import { MAP_SOURCES, DEFAULT_SOURCE_ID } from "../constants/mapSources";
+
+function getInitialPanels() {
+  // Get available source IDs excluding the default one
+  const availableSources = Object.keys(MAP_SOURCES).filter(
+    (id) => id !== DEFAULT_SOURCE_ID
+  );
+
+  // Create 4 panels with unique sources where possible
+  return Array.from({ length: 4 }, (_, index) => ({
+    id: String(index + 1),
+    sourceId: availableSources[index] || DEFAULT_SOURCE_ID,
+    position: index,
+  }));
+}
+
+function findUnusedSource(usedSources: string[]): string {
+  const unusedSource = Object.keys(MAP_SOURCES).find(
+    (sourceId) => !usedSources.includes(sourceId)
+  );
+  return unusedSource || DEFAULT_SOURCE_ID;
+}
 
 const initialMapState: MapState = {
-  // center and zoom should cover europe
-  center: [10, 50],
-  zoom: 5,
+  center: [15, 50], // Roughly center of Europe
+  zoom: 4, // Good zoom level to see most of Europe
   bearing: 0,
   pitch: 0,
 };
 
 const initialState: AppState = {
   layout: {
-    boxCount: 1,
+    boxCount: 4,
     isToolbarExpanded: true,
   },
-  panels: [
-    {
-      id: "1",
-      sourceId: DEFAULT_SOURCE_ID,
-      position: 0,
-    },
-  ],
+  panels: getInitialPanels(),
   mapState: initialMapState,
 };
+
+console.log(initialState);
 
 type Action =
   | { type: "SET_BOX_COUNT"; payload: BoxCount }
@@ -34,37 +50,46 @@ type Action =
       payload: { panelId: string; sourceId: string };
     };
 
-const appReducer = (state: AppState, action: Action): AppState => {
+function appReducer(state: AppState, action: Action): AppState {
   switch (action.type) {
-    case "SET_BOX_COUNT":
-      return {
-        ...state,
-        layout: {
-          ...state.layout,
-          boxCount: action.payload,
-        },
-        panels: state.panels.slice(0, action.payload),
-      };
+    case "SET_BOX_COUNT": {
+      const newCount = action.payload;
+      const currentPanels = [...state.panels];
 
-    case "TOGGLE_TOOLBAR":
-      return {
-        ...state,
-        layout: {
-          ...state.layout,
-          isToolbarExpanded: !state.layout.isToolbarExpanded,
-        },
-      };
+      if (newCount > currentPanels.length) {
+        // Adding new panels
+        const usedSources = currentPanels.map((panel) => panel.sourceId);
+        const newPanels = Array.from(
+          { length: newCount - currentPanels.length },
+          (_, index) => ({
+            id: String(currentPanels.length + index + 1),
+            sourceId: findUnusedSource(usedSources),
+            position: currentPanels.length + index,
+          })
+        );
 
-    case "UPDATE_MAP_STATE":
-      return {
-        ...state,
-        mapState: {
-          ...state.mapState,
-          ...action.payload,
-        },
-      };
+        return {
+          ...state,
+          layout: {
+            ...state.layout,
+            boxCount: newCount,
+          },
+          panels: [...currentPanels, ...newPanels],
+        };
+      } else {
+        // Removing panels
+        return {
+          ...state,
+          layout: {
+            ...state.layout,
+            boxCount: newCount,
+          },
+          panels: currentPanels.slice(0, newCount),
+        };
+      }
+    }
 
-    case "UPDATE_PANEL_SOURCE":
+    case "UPDATE_PANEL_SOURCE": {
       return {
         ...state,
         panels: state.panels.map((panel) =>
@@ -73,18 +98,39 @@ const appReducer = (state: AppState, action: Action): AppState => {
             : panel
         ),
       };
+    }
+
+    case "UPDATE_MAP_STATE": {
+      return {
+        ...state,
+        mapState: {
+          ...state.mapState,
+          ...action.payload,
+        },
+      };
+    }
+
+    case "TOGGLE_TOOLBAR": {
+      return {
+        ...state,
+        layout: {
+          ...state.layout,
+          isToolbarExpanded: !state.layout.isToolbarExpanded,
+        },
+      };
+    }
 
     default:
       return state;
   }
-};
+}
 
 const AppContext = createContext<{
   state: AppState;
   dispatch: React.Dispatch<Action>;
 } | null>(null);
 
-export const AppProvider = ({ children }: { children: ReactNode }) => {
+export function AppProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(appReducer, initialState);
 
   return (
@@ -92,12 +138,12 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       {children}
     </AppContext.Provider>
   );
-};
+}
 
-export const useApp = () => {
+export function useApp() {
   const context = useContext(AppContext);
   if (!context) {
     throw new Error("useApp must be used within an AppProvider");
   }
   return context;
-};
+}
