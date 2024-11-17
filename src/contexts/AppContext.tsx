@@ -7,7 +7,7 @@ import {
 } from "react";
 import { DEFAULT_SOURCE_ID, MAP_SOURCES } from "../constants/mapSources";
 import { useLocalStorage } from "../hooks/useLocalStorage";
-import { AppState, BoxCount, MapSource, MapState } from "../types";
+import { AppState, BoxCount, MapSource, MapState, ApiKeys } from "../types";
 import { useMapHash } from "../hooks/useMapHash";
 
 function getInitialPanels() {
@@ -45,6 +45,7 @@ const initialState: AppState = {
   panels: getInitialPanels(),
   mapState: initialMapState,
   customSources: {},
+  apiKeys: {},
 };
 
 const STORAGE_KEY = "mapmatrix-state";
@@ -63,6 +64,7 @@ type Action =
       payload: { panelId: string; mapState: MapState };
     }
   | { type: "ADD_CUSTOM_SOURCE"; payload: { id: string; source: MapSource } }
+  | { type: "UPDATE_API_KEYS"; payload: ApiKeys }
   | { type: "RESET_STATE" };
 
 function appReducer(state: AppState, action: Action): AppState {
@@ -168,6 +170,12 @@ function appReducer(state: AppState, action: Action): AppState {
           ...state.customSources,
           [action.payload.id]: action.payload.source,
         },
+      };
+
+    case "UPDATE_API_KEYS":
+      return {
+        ...state,
+        apiKeys: action.payload,
       };
 
     case "RESET_STATE":

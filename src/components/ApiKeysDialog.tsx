@@ -1,27 +1,36 @@
 import { useState } from "react";
-import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useModalClose } from "../hooks/useModalClose";
+import { useApp } from "../contexts/AppContext";
 
 interface ApiKeysDialogProps {
   onClose: () => void;
 }
 
-interface ApiKeys {
-  googleMaps?: string;
-}
-
 export function ApiKeysDialog({ onClose }: ApiKeysDialogProps) {
-  const [apiKeys, setApiKeys] = useLocalStorage<ApiKeys>("apiKeys", {});
-  const [googleMapsKey, setGoogleMapsKey] = useState(apiKeys.googleMaps || "");
+  const { state, dispatch } = useApp();
+  const [googleMapsKey, setGoogleMapsKey] = useState(
+    state.apiKeys?.googleMaps || ""
+  );
   const { handleOverlayClick } = useModalClose(onClose);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setApiKeys((prev) => ({
-      ...prev,
-      googleMaps: googleMapsKey,
-    }));
+    dispatch({
+      type: "UPDATE_API_KEYS",
+      payload: {
+        ...state.apiKeys,
+        googleMaps: googleMapsKey,
+      },
+    });
     onClose();
+  };
+
+  const handleClearKeys = () => {
+    dispatch({
+      type: "UPDATE_API_KEYS",
+      payload: {},
+    });
+    setGoogleMapsKey("");
   };
 
   return (
@@ -59,6 +68,7 @@ export function ApiKeysDialog({ onClose }: ApiKeysDialogProps) {
               Google Maps API Key
               <input
                 type="password"
+                autoComplete="off"
                 value={googleMapsKey}
                 onChange={(e) => setGoogleMapsKey(e.target.value)}
                 className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-2"
@@ -71,6 +81,13 @@ export function ApiKeysDialog({ onClose }: ApiKeysDialogProps) {
           </div>
 
           <div className="flex justify-end gap-2">
+            <button
+              type="button"
+              onClick={handleClearKeys}
+              className="px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded"
+            >
+              Clear All Keys
+            </button>
             <button
               type="button"
               onClick={onClose}

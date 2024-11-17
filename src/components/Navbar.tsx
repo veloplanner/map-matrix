@@ -65,13 +65,17 @@ export function Navbar() {
         <div className="flex flex-col md:flex-row">
           {/* Title Row (mobile) / Left Section (desktop) */}
           <div className="h-12 md:h-14 px-4 flex items-center justify-between md:justify-start md:gap-4 border-b md:border-b-0 border-slate-100">
-            <h1 className="text-lg font-semibold text-slate-900">MapMatrix</h1>
-            <a
-              className="bg-brand/5 text-brand rounded-full px-3 py-1 text-sm"
-              href="https://veloplanner.com"
-            >
-              by VeloPlanner
-            </a>
+            <div className="flex items-center gap-4">
+              <h1 className="text-lg font-semibold text-slate-900">
+                MapMatrix
+              </h1>
+              <a
+                className="bg-brand/5 text-brand rounded-full px-3 py-1 text-sm"
+                href="https://veloplanner.com"
+              >
+                by VeloPlanner
+              </a>
+            </div>
 
             <a
               className="p-1 rounded hover:opacity-80"
