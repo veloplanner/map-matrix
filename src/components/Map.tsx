@@ -5,7 +5,7 @@ import {
   Source,
   NavigationControl,
 } from "@vis.gl/react-maplibre";
-import { Map as GoogleMap, APIProvider } from "@vis.gl/react-google-maps";
+import { GoogleMap } from "./GoogleMap";
 import { SourceSpecification } from "maplibre-gl";
 
 import { MapState } from "../types";
@@ -95,36 +95,14 @@ export function Map({
     }
 
     return (
-      <APIProvider apiKey={state.apiKeys.googleMaps}>
-        <div className="relative w-full h-full">
-          <GoogleMap
-            disableDefaultUI={true}
-            center={{
-              lat: effectiveMapState.center[1],
-              lng: effectiveMapState.center[0],
-            }}
-            zoom={effectiveMapState.zoom}
-            mapTypeId={source.mapType}
-            heading={effectiveMapState.bearing}
-            tilt={effectiveMapState.pitch}
-            gestureHandling="greedy"
-            onCameraChanged={({ detail: { center, zoom, heading, tilt } }) => {
-              const newState: Partial<MapState> = {
-                center: [center.lng, center.lat],
-                zoom,
-                bearing: heading ?? effectiveMapState.bearing,
-                pitch: tilt ?? effectiveMapState.pitch,
-              };
-
-              if (synchronized) {
-                onMapChange(newState);
-              } else {
-                onViewStateChange(newState);
-              }
-            }}
-          />
-        </div>
-      </APIProvider>
+      <GoogleMap
+        mapState={effectiveMapState}
+        source={source}
+        apiKey={state.apiKeys.googleMaps}
+        synchronized={synchronized}
+        onMapChange={onMapChange}
+        onViewStateChange={onViewStateChange}
+      />
     );
   }
 
