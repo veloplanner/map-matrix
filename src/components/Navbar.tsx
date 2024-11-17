@@ -2,9 +2,11 @@ import { useState } from "react";
 import { Toolbar } from "./Toolbar";
 import { AddSourceDialog, NewSourceFormData } from "./AddSourceDialog";
 import { useApp } from "../contexts/AppContext";
+import { ApiKeysDialog } from "./ApiKeysDialog";
 
 export function Navbar() {
   const [showAddDialog, setShowAddDialog] = useState(false);
+  const [showApiKeysDialog, setShowApiKeysDialog] = useState(false);
   const { dispatch } = useApp();
 
   function handleAddSource(formData: NewSourceFormData) {
@@ -85,6 +87,12 @@ export function Navbar() {
           {/* Controls Row (mobile) / Right Section (desktop) */}
           <div className="h-12 md:h-14 px-4 flex items-center justify-between md:ml-auto md:gap-4">
             <button
+              onClick={() => setShowApiKeysDialog(true)}
+              className="text-sm px-3 py-1.5 rounded border border-slate-200 hover:bg-slate-50"
+            >
+              API Keys
+            </button>
+            <button
               onClick={() => setShowAddDialog(true)}
               className="text-sm px-3 py-1.5 rounded border border-slate-200 hover:bg-slate-50"
             >
@@ -107,6 +115,10 @@ export function Navbar() {
           onAdd={handleAddSource}
           onClose={() => setShowAddDialog(false)}
         />
+      )}
+
+      {showApiKeysDialog && (
+        <ApiKeysDialog onClose={() => setShowApiKeysDialog(false)} />
       )}
     </>
   );
