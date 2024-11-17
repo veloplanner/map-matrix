@@ -1,7 +1,14 @@
-import { createContext, ReactNode, useCallback, useContext } from "react";
+import {
+  createContext,
+  ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+} from "react";
 import { DEFAULT_SOURCE_ID, MAP_SOURCES } from "../constants/mapSources";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { AppState, BoxCount, MapSource, MapState } from "../types";
+import { useMapHash } from "../hooks/useMapHash";
 
 function getInitialPanels() {
   // Get available source IDs excluding the default one
@@ -181,6 +188,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
     STORAGE_KEY,
     initialState
   );
+
+  const hashState = useMapHash(state.mapState);
+
+  useEffect(() => {
+    if (hashState) {
+      dispatch({ type: "UPDATE_MAP_STATE", payload: hashState });
+    }
+  }, []);
 
   const dispatch = useCallback(
     (action: Action) => {
