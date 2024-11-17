@@ -1,26 +1,27 @@
 import { useState } from "react";
-import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useModalClose } from "../hooks/useModalClose";
+import { useApp } from "../contexts/AppContext";
 
 interface ApiKeysDialogProps {
   onClose: () => void;
 }
 
-interface ApiKeys {
-  googleMaps?: string;
-}
-
 export function ApiKeysDialog({ onClose }: ApiKeysDialogProps) {
-  const [apiKeys, setApiKeys] = useLocalStorage<ApiKeys>("apiKeys", {});
-  const [googleMapsKey, setGoogleMapsKey] = useState(apiKeys.googleMaps || "");
+  const { state, dispatch } = useApp();
+  const [googleMapsKey, setGoogleMapsKey] = useState(
+    state.apiKeys?.googleMaps || ""
+  );
   const { handleOverlayClick } = useModalClose(onClose);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setApiKeys((prev) => ({
-      ...prev,
-      googleMaps: googleMapsKey,
-    }));
+    dispatch({
+      type: "UPDATE_API_KEYS",
+      payload: {
+        ...state.apiKeys,
+        googleMaps: googleMapsKey,
+      },
+    });
     onClose();
   };
 
