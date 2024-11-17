@@ -5,6 +5,7 @@ interface MapContextMenuProps {
   y: number;
   lat: number;
   lng: number;
+  zoom: number;
   onClose: () => void;
 }
 
@@ -13,6 +14,7 @@ export function MapContextMenu({
   y,
   lat,
   lng,
+  zoom,
   onClose,
 }: MapContextMenuProps) {
   useEffect(() => {
@@ -31,10 +33,11 @@ export function MapContextMenu({
       id="map-context-menu"
       className="absolute z-50 bg-white rounded-lg shadow-lg border border-gray-200 py-1 w-[200px]"
       style={{ left: x, top: y }}
-      onClick={(e) => e.stopPropagation()}
     >
       <a
-        href={`https://www.openstreetmap.org/#map=16/${lat}/${lng}`}
+        href={`https://www.openstreetmap.org/#map=${Math.round(
+          zoom
+        )}/${lat}/${lng}`}
         target="_blank"
         rel="noopener noreferrer"
         className="block px-4 py-2 text-sm hover:bg-slate-100"

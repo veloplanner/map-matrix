@@ -136,6 +136,7 @@ export function Map({
               y={contextMenu.y}
               lat={contextMenu.lat}
               lng={contextMenu.lng}
+              zoom={effectiveMapState.zoom}
               onClose={() =>
                 setContextMenu((prev) => ({ ...prev, show: false }))
               }
@@ -177,6 +178,7 @@ export function Map({
             y={contextMenu.y}
             lat={contextMenu.lat}
             lng={contextMenu.lng}
+            zoom={effectiveMapState.zoom}
             onClose={() => setContextMenu((prev) => ({ ...prev, show: false }))}
           />
         )}
