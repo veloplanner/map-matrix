@@ -3,12 +3,14 @@ import {
   ViewStateChangeEvent,
   Layer,
   Source,
+  NavigationControl,
 } from "@vis.gl/react-maplibre";
 import { Map as GoogleMap, APIProvider } from "@vis.gl/react-google-maps";
+import { SourceSpecification } from "maplibre-gl";
+
 import { MapState } from "../types";
 import { GOOGLE_SOURCES, MAP_SOURCES } from "../constants/mapSources";
 import { useApp } from "../contexts/AppContext";
-import { SourceSpecification } from "maplibre-gl";
 import { MapContextMenu } from "./MapContextMenu";
 import { useState } from "react";
 
@@ -190,6 +192,8 @@ export function Map({
               }
             />
           )}
+
+          <NavigationControl showCompass={false} />
         </MapGL>
       </div>
     );
@@ -232,6 +236,8 @@ export function Map({
               }
             />
           )}
+
+          <NavigationControl showCompass={false} />
         </MapGL>
       </div>
     );
