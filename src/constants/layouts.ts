@@ -1,3 +1,5 @@
+import { BoxCount } from "../types";
+
 type GridConfig = {
   cols: string;
   rows: string;
@@ -30,4 +32,6 @@ export const GRID_LAYOUTS: Record<number, GridConfig> = {
   },
 } as const;
 
-export const AVAILABLE_LAYOUTS = Object.keys(GRID_LAYOUTS).map(Number);
+export const AVAILABLE_LAYOUTS: BoxCount[] = Object.keys(GRID_LAYOUTS).map(
+  Number
+) as BoxCount[];
