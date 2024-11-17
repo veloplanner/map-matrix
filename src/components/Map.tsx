@@ -29,6 +29,7 @@ export function Map({ mapState, sourceId, onMapChange }: MapProps) {
         {...mapState}
         longitude={mapState.center[0]}
         latitude={mapState.center[1]}
+        attributionControl={true}
         mapStyle={{
           version: 8,
           sources: {
