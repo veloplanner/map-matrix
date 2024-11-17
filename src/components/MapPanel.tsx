@@ -38,8 +38,8 @@ export function MapPanel({ panel, className }: MapPanelProps) {
         className ?? ""
       }`}
     >
-      <div className="p-3 border-b border-slate-200 space-y-2">
-        <div className="flex items-center justify-between">
+      <div className="p-2 md:p-3 border-b border-slate-200 space-y-2">
+        <div className="flex items-center justify-between gap-2">
           <SourceSelector panelId={panel.id} currentSourceId={panel.sourceId} />
           <button
             onClick={() =>
@@ -48,7 +48,7 @@ export function MapPanel({ panel, className }: MapPanelProps) {
                 payload: { panelId: panel.id },
               })
             }
-            className={`ml-2 px-2 py-1 rounded text-sm ${
+            className={`px-2 py-1 rounded text-sm ${
               panel.synchronized
                 ? "bg-slate-200 text-slate-900"
                 : "text-slate-600 hover:bg-slate-100"
@@ -57,15 +57,15 @@ export function MapPanel({ panel, className }: MapPanelProps) {
             {panel.synchronized ? "Synced" : "Unsynced"}
           </button>
         </div>
-        <div className="flex items-center justify-end text-sm text-slate-600">
-          <div className="flex items-center gap-4 ">
-            <div style={{ width: 100 }}>
+        <div className="overflow-x-auto scrollbar-none">
+          <div className="flex items-center text-sm text-slate-600 whitespace-nowrap min-w-fit gap-4 px-0.5">
+            <div className="w-[80px]">
               Zoom: {effectiveMapState.zoom.toFixed(2)}
             </div>
-            <div style={{ width: 100 }}>
+            <div className="w-[120px]">
               Lat: {effectiveMapState.center[1].toFixed(4)}°
             </div>
-            <div style={{ width: 100 }}>
+            <div className="w-[120px]">
               Lon: {effectiveMapState.center[0].toFixed(4)}°
             </div>
           </div>
