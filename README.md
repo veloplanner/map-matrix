@@ -13,7 +13,7 @@ Configuration is stored in the browser's local storage.
 
 ![screenshot](https://github.com/veloplanner/map-matrix/blob/main/screenshot.png)
 
-Example of using Cursor AI:
+Example of Cursor AI flow:
 
 ![screenshot-cursor-ai.png](https://github.com/veloplanner/map-matrix/blob/main/screenshot-cursor-ai.png)
 
