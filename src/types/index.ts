@@ -29,16 +29,22 @@ export interface MapState {
   pitch: number;
 }
 
-export type MapSourceType = "maplibre" | "raster";
-
-export interface MapSource {
+export interface VectorSource {
   id: string;
   name: string;
-  type: MapSourceType;
-  style?: string;
-  url?: string;
-  attribution?: string;
+  type: "vector";
+  style: string;
 }
+
+export interface RasterSource {
+  id: string;
+  name: string;
+  type: "raster";
+  url: string;
+  attribution: string;
+}
+
+export type MapSource = VectorSource | RasterSource;
 
 export interface CustomMapConfig {
   id: string;

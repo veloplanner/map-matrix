@@ -1,7 +1,6 @@
 import { Map as MapGL, ViewState } from "@vis.gl/react-maplibre";
-import "maplibre-gl/dist/maplibre-gl.css";
-
 import { MapState } from "../types";
+import { MAP_SOURCES } from "../constants/mapSources";
 
 interface MapProps {
   mapState: MapState;
@@ -9,7 +8,9 @@ interface MapProps {
   onMapChange: (state: Partial<MapState>) => void;
 }
 
-export function Map({ mapState, onMapChange }: MapProps) {
+export function Map({ mapState, sourceId, onMapChange }: MapProps) {
+  const source = MAP_SOURCES[sourceId];
+
   function handleMove({ viewState }: { viewState: ViewState }) {
     onMapChange({
       center: [viewState.longitude, viewState.latitude],
@@ -17,6 +18,37 @@ export function Map({ mapState, onMapChange }: MapProps) {
       bearing: viewState.bearing,
       pitch: viewState.pitch,
     });
+  }
+
+  if (source.type === "raster") {
+    return (
+      <MapGL
+        style={{ width: "100%", height: "100%" }}
+        maxZoom={20}
+        onMove={handleMove}
+        {...mapState}
+        longitude={mapState.center[0]}
+        latitude={mapState.center[1]}
+        mapStyle={{
+          version: 8,
+          sources: {
+            "raster-tiles": {
+              type: "raster",
+              tiles: [source.url],
+              tileSize: 256,
+              attribution: source.attribution,
+            },
+          },
+          layers: [
+            {
+              id: "raster-layer",
+              type: "raster",
+              source: "raster-tiles",
+            },
+          ],
+        }}
+      />
+    );
   }
 
   return (
@@ -27,7 +59,7 @@ export function Map({ mapState, onMapChange }: MapProps) {
       {...mapState}
       longitude={mapState.center[0]}
       latitude={mapState.center[1]}
-      mapStyle="https://demotiles.maplibre.org/style.json"
+      mapStyle={source.style}
     />
   );
 }

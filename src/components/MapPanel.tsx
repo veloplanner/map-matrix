@@ -1,5 +1,6 @@
 import { useApp } from "../contexts/AppContext";
 import { Map } from "./Map";
+import { SourceSelector } from "./SourceSelector";
 import { Panel } from "../types";
 
 interface MapPanelProps {
@@ -16,15 +17,20 @@ export function MapPanel({ panel, className }: MapPanelProps) {
 
   return (
     <div
-      className={`w-full h-full bg-white rounded-lg shadow-sm overflow-hidden ${
+      className={`flex flex-col w-full h-full bg-white rounded-lg shadow-sm overflow-hidden ${
         className ?? ""
       }`}
     >
-      <Map
-        mapState={state.mapState}
-        sourceId={panel.sourceId}
-        onMapChange={handleMapChange}
-      />
+      <div className="px-3 py-2 border-b border-slate-200">
+        <SourceSelector panelId={panel.id} currentSourceId={panel.sourceId} />
+      </div>
+      <div className="flex-1">
+        <Map
+          mapState={state.mapState}
+          sourceId={panel.sourceId}
+          onMapChange={handleMapChange}
+        />
+      </div>
     </div>
   );
 }

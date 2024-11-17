@@ -1,9 +1,11 @@
 import { createContext, useContext, useReducer, ReactNode } from "react";
 import { AppState, BoxCount, MapState } from "../types";
+import { DEFAULT_SOURCE_ID } from "../constants/mapSources";
 
 const initialMapState: MapState = {
-  center: [-74.5, 40],
-  zoom: 9,
+  // center and zoom should cover europe
+  center: [10, 50],
+  zoom: 5,
   bearing: 0,
   pitch: 0,
 };
@@ -16,7 +18,7 @@ const initialState: AppState = {
   panels: [
     {
       id: "1",
-      sourceId: "maplibre-default",
+      sourceId: DEFAULT_SOURCE_ID,
       position: 0,
     },
   ],
