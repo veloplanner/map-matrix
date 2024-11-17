@@ -1,4 +1,9 @@
-import { Map as MapGL, ViewStateChangeEvent } from "@vis.gl/react-maplibre";
+import {
+  Map as MapGL,
+  ViewStateChangeEvent,
+  Layer,
+  Source,
+} from "@vis.gl/react-maplibre";
 import { MapState } from "../types";
 import { MAP_SOURCES } from "../constants/mapSources";
 import { useApp } from "../contexts/AppContext";
@@ -102,6 +107,20 @@ export function Map({
       longitude={effectiveMapState.center[0]}
       latitude={effectiveMapState.center[1]}
       mapStyle={source.style}
-    />
+    >
+      {source.type === "vector" &&
+        source.overlays?.map((overlay) => (
+          <Source
+            key={overlay.sourceId}
+            id={overlay.sourceId}
+            type="vector"
+            url={overlay.url}
+          >
+            {overlay.layers.map((layer) => (
+              <Layer key={layer.id} {...layer} />
+            ))}
+          </Source>
+        ))}
+    </MapGL>
   );
 }

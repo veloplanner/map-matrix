@@ -1,3 +1,5 @@
+import type { LayerSpecification } from "maplibre-gl";
+
 import { MAP_SOURCES } from "../constants/mapSources";
 
 export type NewSourceFormData = {
@@ -42,6 +44,11 @@ export interface VectorSource {
   name: string;
   type: "vector";
   style: string;
+  overlays?: {
+    sourceId: string;
+    url: string;
+    layers: LayerSpecification[];
+  }[];
 }
 
 export interface RasterSource {

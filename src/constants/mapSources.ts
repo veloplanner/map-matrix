@@ -1,6 +1,14 @@
 import { MapSource } from "../types";
+import { VELO_ROUTES_OVERLAY } from "./veloRoutesLayers";
 
 export const MAP_SOURCES: Record<string, MapSource> = {
+  veloplanner: {
+    id: "veloplanner",
+    name: "Veloplanner",
+    type: "vector",
+    style: "https://services.velomapa.pl/basemap/styles/velomapa.json",
+    overlays: [VELO_ROUTES_OVERLAY],
+  },
   openstreetmap: {
     id: "openstreetmap",
     name: "OpenStreetMap",
