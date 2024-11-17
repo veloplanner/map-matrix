@@ -1,22 +1,111 @@
 import { useState } from "react";
-import { NewSourceFormData } from "../types";
 
 interface AddSourceDialogProps {
   onAdd: (source: NewSourceFormData) => void;
   onClose: () => void;
 }
 
+interface FormField {
+  required: boolean;
+  touched: boolean;
+  value: string;
+}
+
+interface FormFields {
+  [key: string]: FormField;
+}
+
+interface BaseSourceFormData {
+  name: string;
+  url: string;
+}
+
+interface VectorSourceFormData extends BaseSourceFormData {
+  type: "vector";
+}
+
+interface RasterSourceFormData extends BaseSourceFormData {
+  type: "raster";
+  attribution: string;
+}
+
+type NewSourceFormData = VectorSourceFormData | RasterSourceFormData;
+
+const initialFormState: FormFields = {
+  name: { required: true, touched: false, value: "" },
+  url: { required: true, touched: false, value: "" },
+  type: { required: true, touched: false, value: "vector" },
+  attribution: {
+    required: false,
+    touched: false,
+    value: "OpenStreetMap contributors",
+  },
+};
+
 export function AddSourceDialog({ onAdd, onClose }: AddSourceDialogProps) {
-  const [formData, setFormData] = useState<NewSourceFormData>({
-    name: "",
-    type: "vector",
-    url: "",
-  });
+  const [formState, setFormState] = useState<FormFields>(initialFormState);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    onAdd(formData);
+
+    // Mark all fields as touched
+    setFormState((prev) =>
+      Object.keys(prev).reduce(
+        (acc, key) => ({
+          ...acc,
+          [key]: { ...prev[key], touched: true },
+        }),
+        {}
+      )
+    );
+
+    const isValid = Object.entries(formState).every(
+      ([key, field]) =>
+        !field.required ||
+        field.value ||
+        (key === "attribution" && formState.type.value !== "raster")
+    );
+
+    if (isValid) {
+      if (formState.type.value === "raster") {
+        onAdd({
+          name: formState.name.value,
+          type: "raster",
+          url: formState.url.value,
+          attribution: formState.attribution.value,
+        });
+      } else {
+        onAdd({
+          name: formState.name.value,
+          type: "vector",
+          url: formState.url.value,
+        });
+      }
+    }
   }
+
+  const updateField = (fieldName: string, value: string) => {
+    setFormState((prev) => ({
+      ...prev,
+      [fieldName]: { ...prev[fieldName], value },
+    }));
+  };
+
+  const markAsTouched = (fieldName: string) => {
+    setFormState((prev) => ({
+      ...prev,
+      [fieldName]: { ...prev[fieldName], touched: true },
+    }));
+  };
+
+  const getInputClassName = (field: FormField) => {
+    const baseClasses = "mt-1 block w-full rounded-md shadow-sm p-2";
+    const borderColor =
+      field.touched && field.required && !field.value
+        ? "border-red-500"
+        : "border-gray-300";
+    return `${baseClasses} border ${borderColor}`;
+  };
 
   return (
     <div
@@ -31,13 +120,16 @@ export function AddSourceDialog({ onAdd, onClose }: AddSourceDialogProps) {
               Name
               <input
                 type="text"
-                value={formData.name}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, name: e.target.value }))
-                }
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-                required
+                value={formState.name.value}
+                onChange={(e) => updateField("name", e.target.value)}
+                onBlur={() => markAsTouched("name")}
+                className={getInputClassName(formState.name)}
               />
+              {formState.name.touched &&
+                formState.name.required &&
+                !formState.name.value && (
+                  <p className="mt-1 text-sm text-red-500">Required</p>
+                )}
             </label>
           </div>
 
@@ -45,26 +137,21 @@ export function AddSourceDialog({ onAdd, onClose }: AddSourceDialogProps) {
             <label className="block text-sm font-medium text-gray-700">
               Type
               <select
-                value={formData.type}
+                value={formState.type.value}
                 onChange={(e) => {
-                  const type = e.target.value as "vector" | "raster";
-
-                  if (type === "raster") {
-                    setFormData((prev) => ({
-                      ...prev,
-                      type,
-                      url: "",
-                      attribution: "",
-                    }));
-                  } else {
-                    setFormData((prev) => ({
-                      ...prev,
-                      type,
-                      url: "",
-                    }));
-                  }
+                  const newType = e.target.value;
+                  setFormState((prev) => ({
+                    ...prev,
+                    type: { ...prev.type, value: newType },
+                    url: { ...prev.url, value: "" },
+                    attribution: {
+                      ...prev.attribution,
+                      value: initialFormState.attribution.value,
+                      required: newType === "raster",
+                    },
+                  }));
                 }}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-2"
               >
                 <option value="vector">Vector</option>
                 <option value="raster">Raster</option>
@@ -77,41 +164,41 @@ export function AddSourceDialog({ onAdd, onClose }: AddSourceDialogProps) {
               URL
               <input
                 type="url"
-                value={formData.url}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, url: e.target.value }))
-                }
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                value={formState.url.value}
+                onChange={(e) => updateField("url", e.target.value)}
+                onBlur={() => markAsTouched("url")}
+                className={getInputClassName(formState.url)}
                 placeholder={
-                  formData.type === "vector"
-                    ? "https://example.com/tiles.json"
+                  formState.type.value === "vector"
+                    ? "https://example.com/style.json"
                     : "https://tile.example.com/{z}/{x}/{y}.png"
                 }
-                required
               />
+              {formState.url.touched &&
+                formState.url.required &&
+                !formState.url.value && (
+                  <p className="mt-1 text-sm text-red-500">Required</p>
+                )}
             </label>
           </div>
 
-          {formData.type === "raster" && (
+          {formState.type.value === "raster" && (
             <div>
               <label className="block text-sm font-medium text-gray-700">
                 Attribution
                 <input
                   type="text"
-                  value={formData.attribution}
-                  onChange={(e) =>
-                    setFormData(
-                      (prev) =>
-                        ({
-                          ...prev,
-                          attribution: e.target.value,
-                        } as NewSourceFormData)
-                    )
-                  }
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                  value={formState.attribution.value}
+                  onChange={(e) => updateField("attribution", e.target.value)}
+                  onBlur={() => markAsTouched("attribution")}
+                  className={getInputClassName(formState.attribution)}
                   placeholder="© OpenStreetMap contributors"
-                  required
                 />
+                {formState.attribution.touched &&
+                  formState.attribution.required &&
+                  !formState.attribution.value && (
+                    <p className="mt-1 text-sm text-red-500">Required</p>
+                  )}
               </label>
             </div>
           )}

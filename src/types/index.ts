@@ -1,22 +1,5 @@
 import type { LayerSpecification } from "maplibre-gl";
 
-import { MAP_SOURCES } from "../constants/mapSources";
-
-export type NewSourceFormData =
-  | {
-      name: string;
-      type: "vector";
-      url: string;
-    }
-  | {
-      name: string;
-      type: "raster";
-      url: string;
-      attribution: string;
-    };
-
-export type MapSourceId = keyof typeof MAP_SOURCES | string;
-
 export type BoxCount = 1 | 2 | 3 | 4 | 5 | 6;
 
 export interface AppState {
