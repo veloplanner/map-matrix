@@ -42,7 +42,6 @@ export function Map({
 
   if (source.type === "raster") {
     const overlayUrls = source.overlayUrls || [];
-    console.log("overlayUrls", overlayUrls);
     const overlaySources = overlayUrls.reduce(
       (acc: Record<string, SourceSpecification>, url, index) => {
         acc[`overlay-${index}`] = {
