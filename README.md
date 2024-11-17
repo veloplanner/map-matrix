@@ -11,7 +11,7 @@ I wanted to develop a simple tool that I needed for [veloplanner.com](https://ve
 You can add custom map source by clicking the "Add Custom Source" button in the navbar.
 Configuration is stored in the browser's local storage.
 
-![screenshot](https://github.com/veloplanner/map-matrix/blob/main/screenshot.png)
+![CleanShot 2024-11-17 at 21 48 38](https://github.com/user-attachments/assets/88fa2a94-7de3-499a-b7cb-de191bb56c6a)
 
 Example of Cursor AI flow:
 
