@@ -1,13 +1,7 @@
-import {
-  createContext,
-  useContext,
-  useReducer,
-  ReactNode,
-  useCallback,
-} from "react";
-import { AppState, MapState, BoxCount } from "../types";
-import { MAP_SOURCES, DEFAULT_SOURCE_ID } from "../constants/mapSources";
+import { createContext, ReactNode, useCallback, useContext } from "react";
+import { DEFAULT_SOURCE_ID, MAP_SOURCES } from "../constants/mapSources";
 import { useLocalStorage } from "../hooks/useLocalStorage";
+import { AppState, BoxCount, MapState } from "../types";
 
 function getInitialPanels() {
   // Get available source IDs excluding the default one
@@ -20,6 +14,7 @@ function getInitialPanels() {
     id: String(index + 1),
     sourceId: availableSources[index] || DEFAULT_SOURCE_ID,
     position: index,
+    synchronized: true,
   }));
 }
 
@@ -55,7 +50,8 @@ type Action =
   | {
       type: "UPDATE_PANEL_SOURCE";
       payload: { panelId: string; sourceId: string };
-    };
+    }
+  | { type: "TOGGLE_PANEL_SYNC"; payload: { panelId: string } };
 
 function appReducer(state: AppState, action: Action): AppState {
   switch (action.type) {
@@ -72,6 +68,7 @@ function appReducer(state: AppState, action: Action): AppState {
             id: String(currentPanels.length + index + 1),
             sourceId: findUnusedSource(usedSources),
             position: currentPanels.length + index,
+            synchronized: true,
           })
         );
 
@@ -126,6 +123,16 @@ function appReducer(state: AppState, action: Action): AppState {
         },
       };
     }
+
+    case "TOGGLE_PANEL_SYNC":
+      return {
+        ...state,
+        panels: state.panels.map((panel) =>
+          panel.id === action.payload.panelId
+            ? { ...panel, synchronized: !panel.synchronized }
+            : panel
+        ),
+      };
 
     default:
       return state;

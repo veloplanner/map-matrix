@@ -1,23 +1,42 @@
-import { Map as MapGL, ViewState } from "@vis.gl/react-maplibre";
+import { Map as MapGL, ViewStateChangeEvent } from "@vis.gl/react-maplibre";
+import { useState } from "react";
 import { MapState } from "../types";
 import { MAP_SOURCES } from "../constants/mapSources";
 
 interface MapProps {
   mapState: MapState;
   sourceId: string;
+  synchronized: boolean;
   onMapChange: (state: Partial<MapState>) => void;
 }
 
-export function Map({ mapState, sourceId, onMapChange }: MapProps) {
-  const source = MAP_SOURCES[sourceId];
+export function Map({
+  mapState: globalMapState,
+  sourceId,
+  synchronized,
+  onMapChange,
+}: MapProps) {
+  const [localMapState, setLocalMapState] = useState<MapState>(globalMapState);
 
-  function handleMove({ viewState }: { viewState: ViewState }) {
-    onMapChange({
-      center: [viewState.longitude, viewState.latitude],
-      zoom: viewState.zoom,
-      bearing: viewState.bearing,
-      pitch: viewState.pitch,
-    });
+  const source = MAP_SOURCES[sourceId];
+  const effectiveMapState = synchronized ? globalMapState : localMapState;
+
+  function handleMove(evt: ViewStateChangeEvent) {
+    const newState: Partial<MapState> = {
+      center: [evt.viewState.longitude, evt.viewState.latitude] as [
+        number,
+        number
+      ],
+      zoom: evt.viewState.zoom,
+      bearing: evt.viewState.bearing,
+      pitch: evt.viewState.pitch,
+    };
+
+    if (synchronized) {
+      onMapChange(newState);
+    } else {
+      setLocalMapState((prev) => ({ ...prev, ...newState }));
+    }
   }
 
   if (source.type === "raster") {
@@ -26,10 +45,9 @@ export function Map({ mapState, sourceId, onMapChange }: MapProps) {
         style={{ width: "100%", height: "100%" }}
         maxZoom={20}
         onMove={handleMove}
-        {...mapState}
-        longitude={mapState.center[0]}
-        latitude={mapState.center[1]}
-        attributionControl={true}
+        {...effectiveMapState}
+        longitude={effectiveMapState.center[0]}
+        latitude={effectiveMapState.center[1]}
         mapStyle={{
           version: 8,
           sources: {
@@ -57,9 +75,9 @@ export function Map({ mapState, sourceId, onMapChange }: MapProps) {
       style={{ width: "100%", height: "100%" }}
       maxZoom={20}
       onMove={handleMove}
-      {...mapState}
-      longitude={mapState.center[0]}
-      latitude={mapState.center[1]}
+      {...effectiveMapState}
+      longitude={effectiveMapState.center[0]}
+      latitude={effectiveMapState.center[1]}
       mapStyle={source.style}
     />
   );

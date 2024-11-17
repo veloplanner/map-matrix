@@ -13,13 +13,7 @@ export interface Panel {
   id: string;
   sourceId: string;
   position: number;
-  layerStates?: LayerState[];
-}
-
-export interface LayerState {
-  layerId: string;
-  visible: boolean;
-  opacity: number;
+  synchronized: boolean;
 }
 
 export interface MapState {
