@@ -21,6 +21,17 @@ export function Navbar() {
     setShowAddDialog(false);
   }
 
+  function handleReset() {
+    if (
+      window.confirm(
+        "Are you sure you want to reset? This will clear all custom sources and settings."
+      )
+    ) {
+      localStorage.clear();
+      dispatch({ type: "RESET_STATE" });
+    }
+  }
+
   return (
     <>
       <nav className="bg-white border-b border-slate-200">
@@ -47,6 +58,12 @@ export function Navbar() {
             >
               <span className="md:inline hidden">Add Custom Source</span>
               <span className="md:hidden">Add Source</span>
+            </button>
+            <button
+              onClick={handleReset}
+              className="text-sm px-3 py-1.5 rounded border border-slate-200 hover:bg-slate-50 text-red-600"
+            >
+              Reset
             </button>
             <Toolbar />
           </div>

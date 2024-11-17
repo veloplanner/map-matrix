@@ -5,9 +5,7 @@ import { AppState, BoxCount, MapSource, MapState } from "../types";
 
 function getInitialPanels() {
   // Get available source IDs excluding the default one
-  const availableSources = Object.keys(MAP_SOURCES).filter(
-    (id) => id !== DEFAULT_SOURCE_ID
-  );
+  const availableSources = Object.keys(MAP_SOURCES);
 
   // Create 4 panels with unique sources where possible
   return Array.from({ length: 4 }, (_, index) => ({
@@ -57,7 +55,8 @@ type Action =
       type: "UPDATE_PANEL_LOCAL_STATE";
       payload: { panelId: string; mapState: MapState };
     }
-  | { type: "ADD_CUSTOM_SOURCE"; payload: { id: string; source: MapSource } };
+  | { type: "ADD_CUSTOM_SOURCE"; payload: { id: string; source: MapSource } }
+  | { type: "RESET_STATE" };
 
 function appReducer(state: AppState, action: Action): AppState {
   switch (action.type) {
@@ -163,6 +162,9 @@ function appReducer(state: AppState, action: Action): AppState {
           [action.payload.id]: action.payload.source,
         },
       };
+
+    case "RESET_STATE":
+      return initialState;
 
     default:
       return state;

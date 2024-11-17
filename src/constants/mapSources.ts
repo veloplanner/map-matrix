@@ -9,13 +9,6 @@ export const MAP_SOURCES: Record<string, MapSource> = {
     style: "https://services.velomapa.pl/basemap/styles/velomapa.json",
     overlays: [VELO_ROUTES_OVERLAY],
   },
-  openstreetmap: {
-    id: "openstreetmap",
-    name: "OpenStreetMap",
-    type: "raster",
-    url: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-    attribution: "© OpenStreetMap contributors",
-  },
   cyclosm: {
     id: "cyclosm",
     name: "CyclOSM",
@@ -30,6 +23,13 @@ export const MAP_SOURCES: Record<string, MapSource> = {
     url: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
     overlayUrls: ["https://tile.waymarkedtrails.org/cycling/{z}/{x}/{y}.png"],
     attribution: "© OpenStreetMap contributors; Waymarked Trails",
+  },
+  openstreetmap: {
+    id: "openstreetmap",
+    name: "OpenStreetMap",
+    type: "raster",
+    url: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+    attribution: "© OpenStreetMap contributors",
   },
 } as const;
 
