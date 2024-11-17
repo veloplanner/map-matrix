@@ -53,7 +53,14 @@ export interface RasterSource {
   attribution: string;
 }
 
-export type MapSource = VectorSource | RasterSource;
+export interface GoogleMapsSource {
+  id: string;
+  name: string;
+  type: "google";
+  mapType: "roadmap" | "satellite" | "hybrid" | "terrain";
+}
+
+export type MapSource = VectorSource | RasterSource | GoogleMapsSource;
 
 export interface CustomMapConfig {
   id: string;

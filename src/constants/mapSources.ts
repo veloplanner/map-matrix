@@ -1,6 +1,33 @@
 import { MapSource } from "../types";
 import { VELO_ROUTES_OVERLAY } from "./veloRoutesLayers";
 
+export const GOOGLE_SOURCES: Record<string, MapSource> = {
+  googleRoadmap: {
+    id: "googleRoadmap",
+    name: "Google Maps",
+    type: "google",
+    mapType: "roadmap",
+  },
+  googleSatellite: {
+    id: "googleSatellite",
+    name: "Google Satellite",
+    type: "google",
+    mapType: "satellite",
+  },
+  googleHybrid: {
+    id: "googleHybrid",
+    name: "Google Hybrid",
+    type: "google",
+    mapType: "hybrid",
+  },
+  googleTerrain: {
+    id: "googleTerrain",
+    name: "Google Terrain",
+    type: "google",
+    mapType: "terrain",
+  },
+} as const;
+
 export const MAP_SOURCES: Record<string, MapSource> = {
   veloplanner: {
     id: "veloplanner",
