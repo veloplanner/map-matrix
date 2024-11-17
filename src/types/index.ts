@@ -1,6 +1,8 @@
+export type BoxCount = 1 | 2 | 3 | 4 | 5 | 6;
+
 export interface AppState {
   layout: {
-    boxCount: 1 | 2 | 4;
+    boxCount: BoxCount;
     isToolbarExpanded: boolean;
   };
   panels: Panel[];
@@ -27,15 +29,21 @@ export interface MapState {
   pitch: number;
 }
 
+export type MapSourceType = "maplibre" | "raster";
+
+export interface MapSource {
+  id: string;
+  name: string;
+  type: MapSourceType;
+  style?: string;
+  url?: string;
+  attribution?: string;
+}
+
 export interface CustomMapConfig {
   id: string;
   name: string;
-  baseMap: {
-    type: "maplibre" | "raster";
-    style?: string;
-    sourceUrl?: string;
-    attribution?: string;
-  };
+  baseMap: MapSource;
   layers: Layer[];
 }
 

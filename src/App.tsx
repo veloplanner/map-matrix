@@ -1,15 +1,10 @@
-import { useState } from "react";
+import { AppProvider } from "./contexts/AppContext";
+import { Layout } from "./components/Layout";
 
-function App() {
+export function App() {
   return (
-    <div className="min-h-screen bg-slate-100">
-      <div className="container mx-auto p-4">
-        <h1 className="text-3xl font-bold text-center text-slate-800">
-          MapMatrix
-        </h1>
-      </div>
-    </div>
+    <AppProvider>
+      <Layout />
+    </AppProvider>
   );
 }
-
-export default App;
