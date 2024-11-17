@@ -207,13 +207,13 @@ export function AddSourceDialog({ onAdd, onClose }: AddSourceDialogProps) {
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm rounded-md border border-gray-300 hover:bg-gray-50"
+              className="px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 text-sm text-white rounded-md bg-blue-600 hover:bg-blue-700"
+              className="px-4 py-2 text-sm text-white bg-brand hover:bg-brand/90 rounded"
             >
               Add Source
             </button>
