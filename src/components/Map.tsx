@@ -8,6 +8,8 @@ import { MapState } from "../types";
 import { MAP_SOURCES } from "../constants/mapSources";
 import { useApp } from "../contexts/AppContext";
 import { SourceSpecification } from "maplibre-gl";
+import { MapContextMenu } from "./MapContextMenu";
+import { useState } from "react";
 
 interface MapProps {
   mapState: MapState;
@@ -15,6 +17,14 @@ interface MapProps {
   synchronized: boolean;
   onMapChange: (state: Partial<MapState>) => void;
   onViewStateChange: (state: Partial<MapState>) => void;
+}
+
+interface ContextMenuState {
+  show: boolean;
+  x: number;
+  y: number;
+  lat: number;
+  lng: number;
 }
 
 export function Map({
@@ -26,6 +36,13 @@ export function Map({
 }: MapProps) {
   const { state } = useApp();
   const source = MAP_SOURCES[sourceId] || state.customSources[sourceId];
+  const [contextMenu, setContextMenu] = useState<ContextMenuState>({
+    show: false,
+    x: 0,
+    y: 0,
+    lat: 0,
+    lng: 0,
+  });
 
   function handleMove(evt: ViewStateChangeEvent) {
     const newState: Partial<MapState> = {
@@ -43,6 +60,22 @@ export function Map({
     } else {
       onViewStateChange(newState);
     }
+  }
+
+  function handleContextMenu(
+    event: maplibregl.MapMouseEvent & { originalEvent: MouseEvent }
+  ) {
+    event.originalEvent.preventDefault();
+    const { x, y } = event.point;
+    const { lng, lat } = event.lngLat;
+
+    setContextMenu({
+      show: true,
+      x: x,
+      y: y,
+      lat: lat,
+      lng: lng,
+    });
   }
 
   if (source.type === "raster") {
@@ -67,60 +100,87 @@ export function Map({
     }));
 
     return (
-      <MapGL
-        style={{ width: "100%", height: "100%" }}
-        maxZoom={20}
-        onMove={handleMove}
-        {...effectiveMapState}
-        longitude={effectiveMapState.center[0]}
-        latitude={effectiveMapState.center[1]}
-        mapStyle={{
-          version: 8,
-          sources: {
-            "raster-tiles": {
-              type: "raster",
-              tiles: [source.url],
-              tileSize: 256,
-              attribution: source.attribution,
+      <div className="relative w-full h-full">
+        <MapGL
+          style={{ width: "100%", height: "100%" }}
+          maxZoom={20}
+          onMove={handleMove}
+          onContextMenu={handleContextMenu}
+          {...effectiveMapState}
+          longitude={effectiveMapState.center[0]}
+          latitude={effectiveMapState.center[1]}
+          mapStyle={{
+            version: 8,
+            sources: {
+              "raster-tiles": {
+                type: "raster",
+                tiles: [source.url],
+                tileSize: 256,
+                attribution: source.attribution,
+              },
+              ...overlaySources,
             },
-            ...overlaySources,
-          },
-          layers: [
-            {
-              id: "raster-layer",
-              type: "raster",
-              source: "raster-tiles",
-            },
-            ...overLayLayers,
-          ],
-        }}
-      />
+            layers: [
+              {
+                id: "raster-layer",
+                type: "raster",
+                source: "raster-tiles",
+              },
+              ...overLayLayers,
+            ],
+          }}
+        >
+          {contextMenu.show && (
+            <MapContextMenu
+              x={contextMenu.x}
+              y={contextMenu.y}
+              lat={contextMenu.lat}
+              lng={contextMenu.lng}
+              onClose={() =>
+                setContextMenu((prev) => ({ ...prev, show: false }))
+              }
+            />
+          )}
+        </MapGL>
+      </div>
     );
   }
 
   return (
-    <MapGL
-      style={{ width: "100%", height: "100%" }}
-      maxZoom={20}
-      onMove={handleMove}
-      {...effectiveMapState}
-      longitude={effectiveMapState.center[0]}
-      latitude={effectiveMapState.center[1]}
-      mapStyle={source.style}
-    >
-      {source.type === "vector" &&
-        source.overlays?.map((overlay) => (
-          <Source
-            key={overlay.sourceId}
-            id={overlay.sourceId}
-            type="vector"
-            url={overlay.url}
-          >
-            {overlay.layers.map((layer) => (
-              <Layer key={layer.id} {...layer} />
-            ))}
-          </Source>
-        ))}
-    </MapGL>
+    <div className="relative w-full h-full">
+      <MapGL
+        style={{ width: "100%", height: "100%" }}
+        maxZoom={20}
+        onMove={handleMove}
+        onContextMenu={handleContextMenu}
+        {...effectiveMapState}
+        longitude={effectiveMapState.center[0]}
+        latitude={effectiveMapState.center[1]}
+        mapStyle={source.style}
+      >
+        {source.type === "vector" &&
+          source.overlays?.map((overlay) => (
+            <Source
+              key={overlay.sourceId}
+              id={overlay.sourceId}
+              type="vector"
+              url={overlay.url}
+            >
+              {overlay.layers.map((layer) => (
+                <Layer key={layer.id} {...layer} />
+              ))}
+            </Source>
+          ))}
+        {contextMenu.show && (
+          <MapContextMenu
+            x={contextMenu.x}
+            y={contextMenu.y}
+            lat={contextMenu.lat}
+            lng={contextMenu.lng}
+            onClose={() => setContextMenu((prev) => ({ ...prev, show: false }))}
+          />
+        )}
+      </MapGL>
+    </div>
   );
 }
