@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Toolbar } from "./Toolbar";
-import { NewSourceFormData } from "../types";
-import { AddSourceDialog } from "./AddSourceDialog";
+import { AddSourceDialog, NewSourceFormData } from "./AddSourceDialog";
 import { useApp } from "../contexts/AppContext";
 
 export function Navbar() {

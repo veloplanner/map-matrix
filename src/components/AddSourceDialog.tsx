@@ -29,7 +29,7 @@ interface RasterSourceFormData extends BaseSourceFormData {
   attribution: string;
 }
 
-type NewSourceFormData = VectorSourceFormData | RasterSourceFormData;
+export type NewSourceFormData = VectorSourceFormData | RasterSourceFormData;
 
 const initialFormState: FormFields = {
   name: { required: true, touched: false, value: "" },
