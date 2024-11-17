@@ -25,6 +25,14 @@ export function ApiKeysDialog({ onClose }: ApiKeysDialogProps) {
     onClose();
   };
 
+  const handleClearKeys = () => {
+    dispatch({
+      type: "UPDATE_API_KEYS",
+      payload: {},
+    });
+    setGoogleMapsKey("");
+  };
+
   return (
     <div
       className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
@@ -72,6 +80,13 @@ export function ApiKeysDialog({ onClose }: ApiKeysDialogProps) {
           </div>
 
           <div className="flex justify-end gap-2">
+            <button
+              type="button"
+              onClick={handleClearKeys}
+              className="px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded"
+            >
+              Clear All Keys
+            </button>
             <button
               type="button"
               onClick={onClose}
