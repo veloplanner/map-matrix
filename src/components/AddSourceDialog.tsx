@@ -10,6 +10,7 @@ export function AddSourceDialog({ onAdd, onClose }: AddSourceDialogProps) {
   const [formData, setFormData] = useState<NewSourceFormData>({
     name: "",
     type: "vector",
+    url: "",
   });
 
   function handleSubmit(e: React.FormEvent) {
@@ -45,14 +46,24 @@ export function AddSourceDialog({ onAdd, onClose }: AddSourceDialogProps) {
               Type
               <select
                 value={formData.type}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    type: e.target.value as "vector" | "raster",
-                    style: undefined,
-                    url: undefined,
-                  }))
-                }
+                onChange={(e) => {
+                  const type = e.target.value as "vector" | "raster";
+
+                  if (type === "raster") {
+                    setFormData((prev) => ({
+                      ...prev,
+                      type,
+                      url: "",
+                      attribution: "",
+                    }));
+                  } else {
+                    setFormData((prev) => ({
+                      ...prev,
+                      type,
+                      url: "",
+                    }));
+                  }
+                }}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
               >
                 <option value="vector">Vector</option>
@@ -61,57 +72,49 @@ export function AddSourceDialog({ onAdd, onClose }: AddSourceDialogProps) {
             </label>
           </div>
 
-          {formData.type === "vector" ? (
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              URL
+              <input
+                type="url"
+                value={formData.url}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, url: e.target.value }))
+                }
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                placeholder={
+                  formData.type === "vector"
+                    ? "https://example.com/tiles.json"
+                    : "https://tile.example.com/{z}/{x}/{y}.png"
+                }
+                required
+              />
+            </label>
+          </div>
+
+          {formData.type === "raster" && (
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                Style URL
+                Attribution
                 <input
-                  type="url"
-                  value={formData.style ?? ""}
+                  type="text"
+                  value={formData.attribution}
                   onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, style: e.target.value }))
+                    setFormData(
+                      (prev) =>
+                        ({
+                          ...prev,
+                          attribution: e.target.value,
+                        } as NewSourceFormData)
+                    )
                   }
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-                  placeholder="https://example.com/style.json"
-                  required
-                />
-              </label>
-            </div>
-          ) : (
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Tile URL
-                <input
-                  type="url"
-                  value={formData.url ?? ""}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, url: e.target.value }))
-                  }
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-                  placeholder="https://tile.example.com/{z}/{x}/{y}.png"
+                  placeholder="© OpenStreetMap contributors"
                   required
                 />
               </label>
             </div>
           )}
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Attribution
-              <input
-                type="text"
-                value={formData.attribution ?? ""}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    attribution: e.target.value,
-                  }))
-                }
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-                placeholder="© OpenStreetMap contributors"
-              />
-            </label>
-          </div>
 
           <div className="flex justify-end gap-2 pt-4">
             <button

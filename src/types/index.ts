@@ -2,13 +2,18 @@ import type { LayerSpecification } from "maplibre-gl";
 
 import { MAP_SOURCES } from "../constants/mapSources";
 
-export type NewSourceFormData = {
-  name: string;
-  type: "vector" | "raster";
-  style?: string; // for vector sources
-  url?: string; // for raster sources
-  attribution?: string;
-};
+export type NewSourceFormData =
+  | {
+      name: string;
+      type: "vector";
+      url: string;
+    }
+  | {
+      name: string;
+      type: "raster";
+      url: string;
+      attribution: string;
+    };
 
 export type MapSourceId = keyof typeof MAP_SOURCES | string;
 

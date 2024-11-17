@@ -10,14 +10,40 @@ export function Navbar() {
 
   function handleAddSource(formData: NewSourceFormData) {
     const id = `custom-${Date.now()}`;
-    const newSource: any = {
+    const newSource = {
       id,
       ...formData,
     };
-    dispatch({
-      type: "ADD_CUSTOM_SOURCE",
-      payload: { id, source: newSource },
-    });
+
+    if (newSource.type === "raster") {
+      dispatch({
+        type: "ADD_CUSTOM_SOURCE",
+        payload: {
+          id,
+          source: {
+            id,
+            name: newSource.name,
+            type: "raster",
+            url: newSource.url,
+            attribution: newSource.attribution,
+          },
+        },
+      });
+    } else {
+      dispatch({
+        type: "ADD_CUSTOM_SOURCE",
+        payload: {
+          id,
+          source: {
+            id,
+            name: newSource.name,
+            type: "vector",
+            style: newSource.url,
+          },
+        },
+      });
+    }
+
     setShowAddDialog(false);
   }
 
