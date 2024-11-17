@@ -8,18 +8,6 @@ export const MAP_SOURCES: Record<string, MapSource> = {
     url: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
     attribution: "© OpenStreetMap contributors",
   },
-  "carto-dark": {
-    id: "carto-dark",
-    name: "Carto Dark",
-    type: "vector",
-    style: "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json",
-  },
-  "carto-light": {
-    id: "carto-light",
-    name: "Carto Light",
-    type: "vector",
-    style: "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json",
-  },
   cyclosm: {
     id: "cyclosm",
     name: "CyclOSM",
@@ -27,11 +15,13 @@ export const MAP_SOURCES: Record<string, MapSource> = {
     url: "https://c.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png",
     attribution: "© OpenStreetMap contributors; CyclOSM",
   },
-  veloplanner_basemap: {
-    id: "veloplanner_basemap",
-    name: "Veloplanner Basemap",
-    type: "vector",
-    style: "https://services.velomapa.pl/basemap/styles/velomapa.json",
+  waymarkedtrails: {
+    id: "waymarkedtrails",
+    name: "Waymarked Trails",
+    type: "raster",
+    url: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+    overlayUrls: ["https://tile.waymarkedtrails.org/cycling/{z}/{x}/{y}.png"],
+    attribution: "© OpenStreetMap contributors; Waymarked Trails",
   },
 } as const;
 

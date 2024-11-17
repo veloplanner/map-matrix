@@ -2,6 +2,7 @@ import { Map as MapGL, ViewStateChangeEvent } from "@vis.gl/react-maplibre";
 import { MapState } from "../types";
 import { MAP_SOURCES } from "../constants/mapSources";
 import { useApp } from "../contexts/AppContext";
+import { SourceSpecification } from "maplibre-gl";
 
 interface MapProps {
   mapState: MapState;
@@ -40,6 +41,27 @@ export function Map({
   }
 
   if (source.type === "raster") {
+    const overlayUrls = source.overlayUrls || [];
+    console.log("overlayUrls", overlayUrls);
+    const overlaySources = overlayUrls.reduce(
+      (acc: Record<string, SourceSpecification>, url, index) => {
+        acc[`overlay-${index}`] = {
+          type: "raster",
+          tiles: [url],
+          tileSize: 256,
+          attribution: source.attribution,
+        };
+        return acc;
+      },
+      {}
+    );
+
+    const overLayLayers = overlayUrls.map((_url, index) => ({
+      id: `overlay-${index}`,
+      type: "raster" as const,
+      source: `overlay-${index}`,
+    }));
+
     return (
       <MapGL
         style={{ width: "100%", height: "100%" }}
@@ -57,6 +79,7 @@ export function Map({
               tileSize: 256,
               attribution: source.attribution,
             },
+            ...overlaySources,
           },
           layers: [
             {
@@ -64,6 +87,7 @@ export function Map({
               type: "raster",
               source: "raster-tiles",
             },
+            ...overLayLayers,
           ],
         }}
       />

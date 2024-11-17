@@ -49,6 +49,7 @@ export interface RasterSource {
   name: string;
   type: "raster";
   url: string;
+  overlayUrls?: string[];
   attribution: string;
 }
 
