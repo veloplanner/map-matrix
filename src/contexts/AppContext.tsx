@@ -1,6 +1,13 @@
-import { createContext, useContext, useReducer, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useReducer,
+  ReactNode,
+  useCallback,
+} from "react";
 import { AppState, MapState, BoxCount } from "../types";
 import { MAP_SOURCES, DEFAULT_SOURCE_ID } from "../constants/mapSources";
+import { useLocalStorage } from "../hooks/useLocalStorage";
 
 function getInitialPanels() {
   // Get available source IDs excluding the default one
@@ -39,7 +46,7 @@ const initialState: AppState = {
   mapState: initialMapState,
 };
 
-console.log(initialState);
+const STORAGE_KEY = "mapmatrix-state";
 
 type Action =
   | { type: "SET_BOX_COUNT"; payload: BoxCount }
@@ -131,7 +138,17 @@ const AppContext = createContext<{
 } | null>(null);
 
 export function AppProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(appReducer, initialState);
+  const [state, setState] = useLocalStorage<AppState>(
+    STORAGE_KEY,
+    initialState
+  );
+
+  const dispatch = useCallback(
+    (action: Action) => {
+      setState((currentState) => appReducer(currentState, action));
+    },
+    [setState]
+  );
 
   return (
     <AppContext.Provider value={{ state, dispatch }}>
