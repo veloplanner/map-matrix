@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useLocalStorage } from "../hooks/useLocalStorage";
+import { useModalClose } from "../hooks/useModalClose";
 
 interface ApiKeysDialogProps {
   onClose: () => void;
@@ -12,6 +13,7 @@ interface ApiKeys {
 export function ApiKeysDialog({ onClose }: ApiKeysDialogProps) {
   const [apiKeys, setApiKeys] = useLocalStorage<ApiKeys>("apiKeys", {});
   const [googleMapsKey, setGoogleMapsKey] = useState(apiKeys.googleMaps || "");
+  const { handleOverlayClick } = useModalClose(onClose);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,7 +25,10 @@ export function ApiKeysDialog({ onClose }: ApiKeysDialogProps) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div
+      className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+      onClick={handleOverlayClick}
+    >
       <div className="bg-white rounded-lg p-6 w-full max-w-md">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-semibold">API Keys Configuration</h2>

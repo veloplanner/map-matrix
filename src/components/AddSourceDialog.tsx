@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useModalClose } from "../hooks/useModalClose";
 
 interface AddSourceDialogProps {
   onAdd: (source: NewSourceFormData) => void;
@@ -44,6 +45,7 @@ const initialFormState: FormFields = {
 
 export function AddSourceDialog({ onAdd, onClose }: AddSourceDialogProps) {
   const [formState, setFormState] = useState<FormFields>(initialFormState);
+  const { handleOverlayClick } = useModalClose(onClose);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -111,6 +113,7 @@ export function AddSourceDialog({ onAdd, onClose }: AddSourceDialogProps) {
     <div
       className="fixed inset-0 bg-black/50 flex items-center justify-center"
       style={{ zIndex: 9999 }}
+      onClick={handleOverlayClick}
     >
       <div className="bg-white rounded-lg p-6 w-full max-w-md">
         <h2 className="text-lg font-semibold mb-4">Add New Map Source</h2>
