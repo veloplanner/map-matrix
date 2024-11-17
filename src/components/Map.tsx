@@ -8,8 +8,6 @@ import { MapState } from "../types";
 import { MAP_SOURCES } from "../constants/mapSources";
 import { useApp } from "../contexts/AppContext";
 import { SourceSpecification } from "maplibre-gl";
-import { useCallback } from "react";
-import throttle from "lodash.throttle";
 
 interface MapProps {
   mapState: MapState;
@@ -29,21 +27,6 @@ export function Map({
   const { state } = useApp();
   const source = MAP_SOURCES[sourceId] || state.customSources[sourceId];
 
-  // Create throttled callbacks
-  const throttledOnMapChange = useCallback(
-    throttle((newState: Partial<MapState>) => {
-      onMapChange(newState);
-    }, 500),
-    [onMapChange]
-  );
-
-  const throttledOnViewStateChange = useCallback(
-    throttle((newState: Partial<MapState>) => {
-      onViewStateChange(newState);
-    }, 500),
-    [onViewStateChange]
-  );
-
   function handleMove(evt: ViewStateChangeEvent) {
     const newState: Partial<MapState> = {
       center: [evt.viewState.longitude, evt.viewState.latitude] as [
@@ -56,9 +39,9 @@ export function Map({
     };
 
     if (synchronized) {
-      throttledOnMapChange(newState);
+      onMapChange(newState);
     } else {
-      throttledOnViewStateChange(newState);
+      onViewStateChange(newState);
     }
   }
 
