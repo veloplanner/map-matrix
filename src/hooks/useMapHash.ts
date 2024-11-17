@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState, useCallback } from "react";
 import throttle from "lodash.throttle";
+import { useCallback, useEffect, useState } from "react";
 import { MapState } from "../types";
 
 function parseHash(): MapState | null {
