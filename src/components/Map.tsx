@@ -42,6 +42,15 @@ export function Map({
     MAP_SOURCES[sourceId] ||
     state.customSources[sourceId] ||
     GOOGLE_SOURCES[sourceId];
+
+  if (!source) {
+    return (
+      <div className="flex items-center justify-center w-full h-full">
+        Map source not found: {sourceId}
+      </div>
+    );
+  }
+
   const [contextMenu, setContextMenu] = useState<ContextMenuState>({
     show: false,
     x: 0,

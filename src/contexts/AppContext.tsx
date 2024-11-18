@@ -33,7 +33,10 @@ function findUnusedSource(usedSources: string[]): string {
   const unusedSource = Object.keys(MAP_SOURCES).find(
     (sourceId) => !usedSources.includes(sourceId)
   );
-  return unusedSource || DEFAULT_SOURCE_ID;
+  if (unusedSource === undefined) {
+    return DEFAULT_SOURCE_ID;
+  }
+  return unusedSource;
 }
 
 const initialMapState: MapState = {

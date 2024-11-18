@@ -12,9 +12,12 @@ interface FormField {
   value: string;
 }
 
-interface FormFields {
-  [key: string]: FormField;
-}
+type SourceFormFields = {
+  name: FormField;
+  url: FormField;
+  type: FormField & { value: "vector" | "raster" };
+  attribution: FormField;
+};
 
 interface BaseSourceFormData {
   name: string;
@@ -32,7 +35,7 @@ interface RasterSourceFormData extends BaseSourceFormData {
 
 export type NewSourceFormData = VectorSourceFormData | RasterSourceFormData;
 
-const initialFormState: FormFields = {
+const initialFormState: SourceFormFields = {
   name: { required: true, touched: false, value: "" },
   url: { required: true, touched: false, value: "" },
   type: { required: true, touched: false, value: "vector" },
@@ -44,22 +47,22 @@ const initialFormState: FormFields = {
 };
 
 export function AddSourceDialog({ onAdd, onClose }: AddSourceDialogProps) {
-  const [formState, setFormState] = useState<FormFields>(initialFormState);
+  const [formState, setFormState] =
+    useState<SourceFormFields>(initialFormState);
   const { handleOverlayClick } = useModalClose(onClose);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-
     // Mark all fields as touched
-    setFormState((prev) =>
-      Object.keys(prev).reduce(
-        (acc, key) => ({
-          ...acc,
-          [key]: { ...prev[key], touched: true },
-        }),
-        {}
-      )
-    );
+    setFormState((prev) => {
+      const newState: SourceFormFields = {
+        name: { ...prev.name, touched: true },
+        url: { ...prev.url, touched: true },
+        type: { ...prev.type, touched: true },
+        attribution: { ...prev.attribution, touched: true },
+      };
+      return newState;
+    });
 
     const isValid = Object.entries(formState).every(
       ([key, field]) =>
@@ -89,25 +92,31 @@ export function AddSourceDialog({ onAdd, onClose }: AddSourceDialogProps) {
   const updateField = (fieldName: string, value: string) => {
     setFormState((prev) => ({
       ...prev,
-      [fieldName]: { ...prev[fieldName], value },
+      [fieldName as keyof SourceFormFields]: {
+        ...prev[fieldName as keyof SourceFormFields],
+        value,
+      },
     }));
   };
 
-  const markAsTouched = (fieldName: string) => {
+  function markAsTouched(fieldName: string) {
     setFormState((prev) => ({
       ...prev,
-      [fieldName]: { ...prev[fieldName], touched: true },
+      [fieldName as keyof SourceFormFields]: {
+        ...prev[fieldName as keyof SourceFormFields],
+        touched: true,
+      },
     }));
-  };
+  }
 
-  const getInputClassName = (field: FormField) => {
+  function getInputClassName(field: FormField) {
     const baseClasses = "mt-1 block w-full rounded-md shadow-sm p-2";
     const borderColor =
       field.touched && field.required && !field.value
         ? "border-red-500"
         : "border-gray-300";
     return `${baseClasses} border ${borderColor}`;
-  };
+  }
 
   return (
     <div
@@ -142,7 +151,7 @@ export function AddSourceDialog({ onAdd, onClose }: AddSourceDialogProps) {
               <select
                 value={formState.type.value}
                 onChange={(e) => {
-                  const newType = e.target.value;
+                  const newType = e.target.value as "raster" | "vector";
                   setFormState((prev) => ({
                     ...prev,
                     type: { ...prev.type, value: newType },

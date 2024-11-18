@@ -28,9 +28,11 @@ export const GOOGLE_SOURCES: Record<string, MapSource> = {
   },
 } as const;
 
+const VELOMAPA_BASEMAP_KEY = "veloplanner_basemap";
+
 export const MAP_SOURCES: Record<string, MapSource> = {
-  veloplanner_basemap: {
-    id: "veloplanner_basemap",
+  [VELOMAPA_BASEMAP_KEY]: {
+    id: VELOMAPA_BASEMAP_KEY,
     name: "Veloplanner Basemap",
     type: "vector",
     style: "https://services.velomapa.pl/basemap/styles/velomapa.json",
@@ -66,4 +68,4 @@ export const MAP_SOURCES: Record<string, MapSource> = {
   },
 } as const;
 
-export const DEFAULT_SOURCE_ID = Object.keys(MAP_SOURCES)[0];
+export const DEFAULT_SOURCE_ID = VELOMAPA_BASEMAP_KEY;

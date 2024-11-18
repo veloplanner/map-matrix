@@ -8,6 +8,11 @@ export function Layout() {
   const { boxCount } = state.layout;
   const layout = GRID_LAYOUTS[boxCount];
 
+  if (!layout) {
+    console.error(`Invalid box count: ${boxCount}`);
+    return <div>Error: Invalid layout configuration</div>;
+  }
+
   return (
     <div className="h-screen flex flex-col">
       <Navbar />
