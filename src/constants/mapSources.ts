@@ -49,9 +49,9 @@ export const MAP_SOURCES: Record<string, MapSource> = {
     url: "https://c.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png",
     attribution: "© OpenStreetMap contributors; CyclOSM",
   },
-  waymarkedtrails: {
-    id: "waymarkedtrails",
-    name: "Waymarked Trails",
+  waymarkedtrails_cycling: {
+    id: "waymarkedtrails_cycling",
+    name: "Waymarked Trails Cycling",
     type: "raster",
     url: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
     overlayUrls: ["https://tile.waymarkedtrails.org/cycling/{z}/{x}/{y}.png"],
