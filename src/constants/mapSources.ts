@@ -29,6 +29,12 @@ export const GOOGLE_SOURCES: Record<string, MapSource> = {
 } as const;
 
 export const MAP_SOURCES: Record<string, MapSource> = {
+  veloplanner_basemap: {
+    id: "veloplanner_basemap",
+    name: "Veloplanner Basemap",
+    type: "vector",
+    style: "https://services.velomapa.pl/basemap/styles/velomapa.json",
+  },
   veloplanner: {
     id: "veloplanner",
     name: "Veloplanner",
