@@ -39,8 +39,8 @@ export function Map({
 }: MapProps) {
   const { state } = useApp();
   const source =
-    MAP_SOURCES[sourceId] ||
     state.customSources[sourceId] ||
+    MAP_SOURCES[sourceId] ||
     GOOGLE_SOURCES[sourceId];
 
   if (!source) {
