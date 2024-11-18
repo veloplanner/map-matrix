@@ -26,11 +26,17 @@ export function ApiKeysDialog({ onClose }: ApiKeysDialogProps) {
   };
 
   const handleClearKeys = () => {
-    dispatch({
-      type: "UPDATE_API_KEYS",
-      payload: {},
-    });
-    setGoogleMapsKey("");
+    const confirmed = window.confirm(
+      "Are you sure you want to clear all API keys? This action cannot be undone."
+    );
+
+    if (confirmed) {
+      dispatch({
+        type: "UPDATE_API_KEYS",
+        payload: {},
+      });
+      setGoogleMapsKey("");
+    }
   };
 
   return (
@@ -80,7 +86,7 @@ export function ApiKeysDialog({ onClose }: ApiKeysDialogProps) {
             </p>
           </div>
 
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-between gap-2">
             <button
               type="button"
               onClick={handleClearKeys}
@@ -88,19 +94,21 @@ export function ApiKeysDialog({ onClose }: ApiKeysDialogProps) {
             >
               Clear All Keys
             </button>
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="px-4 py-2 text-sm text-white bg-brand hover:bg-brand/90 rounded"
-            >
-              Save
-            </button>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-4 py-2 text-sm text-white bg-brand hover:bg-brand/90 rounded"
+              >
+                Save
+              </button>
+            </div>
           </div>
         </form>
       </div>
