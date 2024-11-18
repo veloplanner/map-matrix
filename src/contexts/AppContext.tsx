@@ -7,15 +7,14 @@ import {
 } from "react";
 import { DEFAULT_SOURCE_ID, MAP_SOURCES } from "../constants/mapSources";
 import { useLocalStorage } from "../hooks/useLocalStorage";
+import { useMapHash } from "../hooks/useMapHash";
 import {
+  ApiKeys,
   AppState,
   BoxCount,
-  MapSource,
-  MapState,
-  ApiKeys,
   CustomMapSource,
+  MapState,
 } from "../types";
-import { useMapHash } from "../hooks/useMapHash";
 
 function getInitialPanels() {
   // Get available source IDs excluding the default one
