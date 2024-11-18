@@ -21,6 +21,7 @@ I wanted to develop a simple tool that I needed for [VeloPlanner.com](https://ve
 
 * You can add custom map source by clicking the "Add Custom Source" button in the navbar.
 * You can add API keys for Google Maps.
+* You can add API keys for Radar Maps.
 * Configuration is stored in the browser's local storage.
 
 ![screenshot](https://github.com/veloplanner/map-matrix/blob/main/screenshot.png)

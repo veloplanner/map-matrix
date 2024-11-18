@@ -9,7 +9,7 @@ import { GoogleMap } from "./GoogleMap";
 import { SourceSpecification } from "maplibre-gl";
 
 import { MapState } from "../types";
-import { GOOGLE_SOURCES, MAP_SOURCES } from "../constants/mapSources";
+import { GOOGLE_SOURCES, RADAR_SOURCES, MAP_SOURCES } from "../constants/mapSources";
 import { useApp } from "../contexts/AppContext";
 import { MapContextMenu } from "./MapContextMenu";
 import { useState } from "react";
@@ -41,7 +41,8 @@ export function Map({
   const source =
     state.customSources[sourceId] ||
     MAP_SOURCES[sourceId] ||
-    GOOGLE_SOURCES[sourceId];
+    GOOGLE_SOURCES[sourceId] ||
+    RADAR_SOURCES[sourceId]
 
   if (!source) {
     return (
@@ -112,6 +113,47 @@ export function Map({
         onMapChange={onMapChange}
         onViewStateChange={onViewStateChange}
       />
+    );
+  }
+
+  // Handle Radar Maps source
+  if (source.type === "radar") {
+    if (!state.apiKeys?.radarMaps) {
+      return (
+        <div className="flex items-center justify-center w-full h-full">
+          Radar Maps API key is required
+        </div>
+      );
+    }
+
+    return (
+      <div className="relative w-full h-full">
+        <MapGL
+          style={{ width: "100%", height: "100%" }}
+          maxZoom={20}
+          onMove={handleMove}
+          onContextMenu={handleContextMenu}
+          {...effectiveMapState}
+          longitude={effectiveMapState.center[0]}
+          latitude={effectiveMapState.center[1]}
+          mapStyle={`${source.url}?publishableKey=${state.apiKeys?.radarMaps}`}
+        >
+          {contextMenu.show && (
+            <MapContextMenu
+              x={contextMenu.x}
+              y={contextMenu.y}
+              lat={contextMenu.lat}
+              lng={contextMenu.lng}
+              zoom={effectiveMapState.zoom}
+              onClose={() =>
+                setContextMenu((prev) => ({ ...prev, show: false }))
+              }
+            />
+          )}
+
+          <NavigationControl showCompass={false} />
+        </MapGL>
+      </div>
     );
   }
 
