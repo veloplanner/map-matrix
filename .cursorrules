@@ -1,0 +1,16 @@
+* Coding style:
+  * prefer `function` over `const` for components
+  * prefer `const` over `let` for variables
+  * prefer `function` over arrow functions
+
+* Prefer code that is simpler instead of clever. It's better to have a few more lines of code than to have a clever one-liner.
+
+* Offer suggestions for performance improvements.
+
+* If my questions is not clear, ask for more details.
+
+* If you don't have context about part of the project, ask me to explain it instead implementing from scratch.
+
+* Include error handling and edge cases in the code.
+
+* Do not jump straight into coding if you think I'm just asking a question about potential solution. Try to decide if I want you to implement it or not.

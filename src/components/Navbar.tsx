@@ -1,52 +1,13 @@
 import { useState } from "react";
 import { Toolbar } from "./Toolbar";
-import { AddSourceDialog, NewSourceFormData } from "./AddSourceDialog";
+import { CustomSourcesDialog } from "./CustomSourcesDialog";
 import { useApp } from "../contexts/AppContext";
 import { ApiKeysDialog } from "./ApiKeysDialog";
 
 export function Navbar() {
-  const [showAddDialog, setShowAddDialog] = useState(false);
+  const [showCustomSourcesDialog, setShowCustomSourcesDialog] = useState(false);
   const [showApiKeysDialog, setShowApiKeysDialog] = useState(false);
   const { dispatch } = useApp();
-
-  function handleAddSource(formData: NewSourceFormData) {
-    const id = `custom-${Date.now()}`;
-    const newSource = {
-      id,
-      ...formData,
-    };
-
-    if (newSource.type === "raster") {
-      dispatch({
-        type: "ADD_CUSTOM_SOURCE",
-        payload: {
-          id,
-          source: {
-            id,
-            name: newSource.name,
-            type: "raster",
-            url: newSource.url,
-            attribution: newSource.attribution,
-          },
-        },
-      });
-    } else {
-      dispatch({
-        type: "ADD_CUSTOM_SOURCE",
-        payload: {
-          id,
-          source: {
-            id,
-            name: newSource.name,
-            type: "vector",
-            style: newSource.url,
-          },
-        },
-      });
-    }
-
-    setShowAddDialog(false);
-  }
 
   function handleReset() {
     if (
@@ -97,11 +58,11 @@ export function Navbar() {
               API Keys
             </button>
             <button
-              onClick={() => setShowAddDialog(true)}
+              onClick={() => setShowCustomSourcesDialog(true)}
               className="text-sm px-3 py-1.5 rounded border border-slate-200 hover:bg-slate-50"
             >
-              <span className="md:inline hidden">Add Custom Source</span>
-              <span className="md:hidden">Add Source</span>
+              <span className="md:inline hidden">Custom Sources</span>
+              <span className="md:hidden">Sources</span>
             </button>
             <button
               onClick={handleReset}
@@ -114,10 +75,9 @@ export function Navbar() {
         </div>
       </nav>
 
-      {showAddDialog && (
-        <AddSourceDialog
-          onAdd={handleAddSource}
-          onClose={() => setShowAddDialog(false)}
+      {showCustomSourcesDialog && (
+        <CustomSourcesDialog
+          onClose={() => setShowCustomSourcesDialog(false)}
         />
       )}
 

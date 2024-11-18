@@ -13,7 +13,7 @@ export interface AppState {
   };
   panels: Panel[];
   mapState: MapState;
-  customSources: Record<string, MapSource>;
+  customSources: Record<string, CustomMapSource>;
   apiKeys?: ApiKeys;
 }
 
@@ -31,6 +31,9 @@ export interface MapState {
   bearing: number;
   pitch: number;
 }
+
+export type MapSource = VectorSource | RasterSource | GoogleMapsSource;
+export type CustomMapSource = VectorSource | RasterSource;
 
 export interface VectorSource {
   id: string;
@@ -60,12 +63,10 @@ export interface GoogleMapsSource {
   mapType: "roadmap" | "satellite" | "hybrid" | "terrain";
 }
 
-export type MapSource = VectorSource | RasterSource | GoogleMapsSource;
-
 export interface CustomMapConfig {
   id: string;
   name: string;
-  baseMap: MapSource;
+  baseMap: CustomMapSource;
   layers: Layer[];
 }
 

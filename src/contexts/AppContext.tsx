@@ -7,7 +7,14 @@ import {
 } from "react";
 import { DEFAULT_SOURCE_ID, MAP_SOURCES } from "../constants/mapSources";
 import { useLocalStorage } from "../hooks/useLocalStorage";
-import { AppState, BoxCount, MapSource, MapState, ApiKeys } from "../types";
+import {
+  AppState,
+  BoxCount,
+  MapSource,
+  MapState,
+  ApiKeys,
+  CustomMapSource,
+} from "../types";
 import { useMapHash } from "../hooks/useMapHash";
 
 function getInitialPanels() {
@@ -63,9 +70,13 @@ type Action =
       type: "UPDATE_PANEL_LOCAL_STATE";
       payload: { panelId: string; mapState: MapState };
     }
-  | { type: "ADD_CUSTOM_SOURCE"; payload: { id: string; source: MapSource } }
+  | {
+      type: "ADD_CUSTOM_SOURCE";
+      payload: { id: string; source: CustomMapSource };
+    }
   | { type: "UPDATE_API_KEYS"; payload: ApiKeys }
-  | { type: "RESET_STATE" };
+  | { type: "RESET_STATE" }
+  | { type: "REMOVE_CUSTOM_SOURCE"; payload: string };
 
 function appReducer(state: AppState, action: Action): AppState {
   switch (action.type) {
@@ -180,6 +191,21 @@ function appReducer(state: AppState, action: Action): AppState {
 
     case "RESET_STATE":
       return initialState;
+
+    case "REMOVE_CUSTOM_SOURCE": {
+      const { [action.payload]: removed, ...remainingSources } =
+        state.customSources;
+      return {
+        ...state,
+        customSources: remainingSources,
+        // Reset any panels using this source to the default source
+        panels: state.panels.map((panel) =>
+          panel.sourceId === action.payload
+            ? { ...panel, sourceId: DEFAULT_SOURCE_ID }
+            : panel
+        ),
+      };
+    }
 
     default:
       return state;
