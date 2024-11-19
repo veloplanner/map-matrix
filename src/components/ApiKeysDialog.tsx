@@ -11,6 +11,9 @@ export function ApiKeysDialog({ onClose }: ApiKeysDialogProps) {
   const [googleMapsKey, setGoogleMapsKey] = useState(
     state.apiKeys?.googleMaps || ""
   );
+  const [radarMapsKey, setRadarMapsKey] = useState(
+    state.apiKeys?.radarMaps || ""
+  );
   const { handleOverlayClick } = useModalClose(onClose);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -20,6 +23,7 @@ export function ApiKeysDialog({ onClose }: ApiKeysDialogProps) {
       payload: {
         ...state.apiKeys,
         googleMaps: googleMapsKey,
+        radarMaps: radarMapsKey,
       },
     });
     onClose();
@@ -36,6 +40,7 @@ export function ApiKeysDialog({ onClose }: ApiKeysDialogProps) {
         payload: {},
       });
       setGoogleMapsKey("");
+      setRadarMapsKey("");
     }
   };
 
@@ -81,10 +86,25 @@ export function ApiKeysDialog({ onClose }: ApiKeysDialogProps) {
                 placeholder="Enter your API key"
               />
             </label>
-            <p className="mt-1 text-sm text-gray-500">
-              Your API key will be stored locally and never shared.
-            </p>
           </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Radar Maps API Key
+              <input
+                type="password"
+                autoComplete="off"
+                value={radarMapsKey}
+                onChange={(e) => setRadarMapsKey(e.target.value)}
+                className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-2"
+                placeholder="Enter your API key"
+              />
+            </label>
+          </div>
+
+          <p className="mt-1 text-sm text-gray-500">
+            Your API keys will be stored locally and never shared.
+          </p>
 
           <div className="flex justify-between gap-2">
             <button

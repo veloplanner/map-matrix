@@ -28,6 +28,16 @@ export const GOOGLE_SOURCES: Record<string, MapSource> = {
   },
 } as const;
 
+export const RADAR_SOURCES: Record<string, MapSource> = {
+  radarRoadmap: {
+    id: "radarRoadmap",
+    name: "Radar Maps",
+    type: "radar",
+    mapType: "roadmap",
+    url: "https://api.radar.io/maps/styles/radar-default-v1"
+  }
+} as const;
+
 const VELOMAPA_BASEMAP_KEY = "veloplanner_basemap";
 
 export const MAP_SOURCES: Record<string, MapSource> = {

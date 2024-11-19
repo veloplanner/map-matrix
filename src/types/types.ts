@@ -4,6 +4,7 @@ export type BoxCount = 1 | 2 | 3 | 4 | 5 | 6;
 
 export interface ApiKeys {
   googleMaps?: string;
+  radarMaps?: string;
 }
 
 export interface AppState {
@@ -32,7 +33,7 @@ export interface MapState {
   pitch: number;
 }
 
-export type MapSource = VectorSource | RasterSource | GoogleMapsSource;
+export type MapSource = VectorSource | RasterSource | GoogleMapsSource | RadarMapsSource;
 export type CustomMapSource = VectorSource | RasterSource;
 
 export interface VectorSource {
@@ -61,6 +62,14 @@ export interface GoogleMapsSource {
   name: string;
   type: "google";
   mapType: "roadmap" | "satellite" | "hybrid" | "terrain";
+}
+
+export interface RadarMapsSource {
+  id: string;
+  name: string;
+  type: "radar";
+  mapType: "roadmap";
+  url: string;
 }
 
 export interface CustomMapConfig {
