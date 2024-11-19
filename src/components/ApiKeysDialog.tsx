@@ -90,7 +90,15 @@ export function ApiKeysDialog({ onClose }: ApiKeysDialogProps) {
 
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              Radar Maps API Key
+              <a
+                href="https://radar.com/documentation/maps/maps"
+                target="_blank"
+                rel="noreferrer"
+                className="text-link"
+              >
+                Radar Maps
+              </a>{" "}
+              API Key
               <input
                 type="password"
                 autoComplete="off"
