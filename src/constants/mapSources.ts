@@ -44,11 +44,18 @@ export const RADAR_SOURCES: Record<string, MapSource> = {
 const VELOMAPA_BASEMAP_KEY = "veloplanner_basemap";
 
 export const MAP_SOURCES: Record<string, MapSource> = {
-  [VELOMAPA_BASEMAP_KEY]: {
-    id: VELOMAPA_BASEMAP_KEY,
-    name: "Veloplanner Basemap",
+  openstreetmap: {
+    id: "openstreetmap",
+    name: "OpenStreetMap",
+    type: "raster",
+    url: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+    attribution: "© OpenStreetMap contributors",
+  },
+  openFreeMap: {
+    id: "openFreeMap",
+    name: "OpenFreeMap",
     type: "vector",
-    style: "https://services.velomapa.pl/basemap/styles/velomapa.json",
+    style: "https://tiles.openfreemap.org/styles/liberty",
   },
   veloplanner: {
     id: "veloplanner",
@@ -72,12 +79,11 @@ export const MAP_SOURCES: Record<string, MapSource> = {
     overlayUrls: ["https://tile.waymarkedtrails.org/cycling/{z}/{x}/{y}.png"],
     attribution: "© OpenStreetMap contributors; Waymarked Trails",
   },
-  openstreetmap: {
-    id: "openstreetmap",
-    name: "OpenStreetMap",
-    type: "raster",
-    url: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-    attribution: "© OpenStreetMap contributors",
+  [VELOMAPA_BASEMAP_KEY]: {
+    id: VELOMAPA_BASEMAP_KEY,
+    name: "Veloplanner Basemap",
+    type: "vector",
+    style: "https://services.velomapa.pl/basemap/styles/velomapa.json",
   },
 } as const;
 
