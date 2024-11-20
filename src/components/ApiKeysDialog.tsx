@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useModalClose } from "../hooks/useModalClose";
 import { useApp } from "../contexts/AppContext";
+import { CopyButton } from "./CopyButton";
 
 interface ApiKeysDialogProps {
   onClose: () => void;
@@ -79,7 +80,7 @@ export function ApiKeysDialog({ onClose }: ApiKeysDialogProps) {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
+          <div className="relative">
             <label className="block text-sm font-medium text-gray-700">
               <a
                 href="https://docs.stadiamaps.com"
@@ -99,9 +100,10 @@ export function ApiKeysDialog({ onClose }: ApiKeysDialogProps) {
                 placeholder="Enter your Stadia Maps API key"
               />
             </label>
+            <CopyButton value={stadiaMapsKey} label="Stadia Maps API key" />
           </div>
 
-          <div>
+          <div className="relative">
             <label className="block text-sm font-medium text-gray-700">
               Google Maps API Key
               <input
@@ -113,9 +115,10 @@ export function ApiKeysDialog({ onClose }: ApiKeysDialogProps) {
                 placeholder="Enter your Google Maps API key"
               />
             </label>
+            <CopyButton value={googleMapsKey} label="Google Maps API key" />
           </div>
 
-          <div>
+          <div className="relative">
             <label className="block text-sm font-medium text-gray-700">
               <a
                 href="https://radar.com/documentation/maps/maps"
@@ -135,6 +138,7 @@ export function ApiKeysDialog({ onClose }: ApiKeysDialogProps) {
                 placeholder="Enter your Radar Maps API key"
               />
             </label>
+            <CopyButton value={radarMapsKey} label="Radar Maps API key" />
           </div>
 
           <p className="mt-1 text-sm text-gray-500">
