@@ -20,79 +20,75 @@ export function SourceSelector({
   const isRadarMapsKeyMissing = !state.apiKeys?.radarMaps;
 
   return (
-    <div className="flex items-center gap-2">
-      <select
-        value={currentSourceId}
-        onChange={(e) =>
-          dispatch({
-            type: "UPDATE_PANEL_SOURCE",
-            payload: { panelId, sourceId: e.target.value },
-          })
+    <select
+      value={currentSourceId}
+      onChange={(e) =>
+        dispatch({
+          type: "UPDATE_PANEL_SOURCE",
+          payload: { panelId, sourceId: e.target.value },
+        })
+      }
+      className="w-full text-xs md:text-sm border border-slate-200 rounded px-1 py-1 md:px-2 md:py-1.5 pr-6 bg-white truncate"
+    >
+      {Object.keys(state.customSources).length > 0 && (
+        <optgroup label="Custom Sources">
+          {Object.values(state.customSources).map((source) => (
+            <option key={source.id} value={source.id}>
+              {source.name}
+            </option>
+          ))}
+        </optgroup>
+      )}
+
+      {Object.values(MAP_SOURCES).map((source) => (
+        <option key={source.id} value={source.id}>
+          {source.name}
+        </option>
+      ))}
+
+      <optgroup label="Stadia Maps">
+        {Object.values(STADIA_SOURCES).map((source) => (
+          <option key={source.id} value={source.id}>
+            {source.name}
+          </option>
+        ))}
+      </optgroup>
+
+      <optgroup
+        label={
+          isGoogleMapsKeyMissing
+            ? "Google Maps (add key to select)"
+            : "Google Maps"
         }
-        className="text-sm border border-slate-200 rounded px-2 py-1 bg-white hover:bg-slate-50"
       >
-        {Object.keys(state.customSources).length > 0 && (
-          <optgroup label="Custom Sources">
-            {Object.values(state.customSources).map((source) => (
-              <option key={source.id} value={source.id}>
-                {source.name}
-              </option>
-            ))}
-          </optgroup>
-        )}
+        {Object.values(GOOGLE_SOURCES).map((source) => (
+          <option
+            key={source.id}
+            value={source.id}
+            disabled={isGoogleMapsKeyMissing}
+          >
+            {source.name}
+          </option>
+        ))}
+      </optgroup>
 
-        <optgroup label="Built-in Sources">
-          {Object.values(MAP_SOURCES).map((source) => (
-            <option key={source.id} value={source.id}>
-              {source.name}
-            </option>
-          ))}
-        </optgroup>
-
-        <optgroup label="Stadia Maps">
-          {Object.values(STADIA_SOURCES).map((source) => (
-            <option key={source.id} value={source.id}>
-              {source.name}
-            </option>
-          ))}
-        </optgroup>
-
-        <optgroup
-          label={
-            isGoogleMapsKeyMissing
-              ? "Google Maps (add key to select)"
-              : "Google Maps"
-          }
-        >
-          {Object.values(GOOGLE_SOURCES).map((source) => (
-            <option
-              key={source.id}
-              value={source.id}
-              disabled={isGoogleMapsKeyMissing}
-            >
-              {source.name}
-            </option>
-          ))}
-        </optgroup>
-
-        <optgroup
-          label={
-            isRadarMapsKeyMissing
-              ? "Radar Maps (add key to select)"
-              : "Radar Maps"
-          }
-        >
-          {Object.values(RADAR_SOURCES).map((source) => (
-            <option
-              key={source.id}
-              value={source.id}
-              disabled={isRadarMapsKeyMissing}
-            >
-              {source.name}
-            </option>
-          ))}
-        </optgroup>
-      </select>
-    </div>
+      <optgroup
+        label={
+          isRadarMapsKeyMissing
+            ? "Radar Maps (add key to select)"
+            : "Radar Maps"
+        }
+      >
+        {Object.values(RADAR_SOURCES).map((source) => (
+          <option
+            key={source.id}
+            value={source.id}
+            disabled={isRadarMapsKeyMissing}
+          >
+            {source.name}
+          </option>
+        ))}
+      </optgroup>
+    </select>
   );
 }
