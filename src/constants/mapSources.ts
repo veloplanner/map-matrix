@@ -32,9 +32,12 @@ export const RADAR_SOURCES: Record<string, MapSource> = {
   radarRoadmap: {
     id: "radarRoadmap",
     name: "Radar Maps",
-    type: "radar",
-    mapType: "roadmap",
-    url: "https://api.radar.io/maps/styles/radar-default-v1",
+    type: "vector",
+    style: "https://api.radar.io/maps/styles/radar-default-v1",
+    apiKeyRequired: {
+      key: "radarMaps",
+      urlParam: "publishableKey",
+    },
   },
 } as const;
 
