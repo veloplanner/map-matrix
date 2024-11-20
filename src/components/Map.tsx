@@ -8,8 +8,13 @@ import {
 import { GoogleMap } from "./GoogleMap";
 import { SourceSpecification } from "maplibre-gl";
 
-import { MapState } from "../types";
-import { GOOGLE_SOURCES, RADAR_SOURCES, MAP_SOURCES } from "../constants/mapSources";
+import { ApiKeys, MapState, VectorSource } from "../types";
+import {
+  GOOGLE_SOURCES,
+  RADAR_SOURCES,
+  MAP_SOURCES,
+  STADIA_SOURCES,
+} from "../constants/mapSources";
 import { useApp } from "../contexts/AppContext";
 import { MapContextMenu } from "./MapContextMenu";
 import { useState } from "react";
@@ -30,6 +35,23 @@ interface ContextMenuState {
   lng: number;
 }
 
+function getStyleUrlWithApiKey(
+  source: VectorSource,
+  apiKeys?: ApiKeys
+): string {
+  if (!source.apiKeyRequired) {
+    return source.style;
+  }
+
+  const apiKey = apiKeys?.[source.apiKeyRequired.key];
+  if (!apiKey) {
+    return source.style;
+  }
+
+  const paramName = source.apiKeyRequired.urlParam || "api_key";
+  return `${source.style}?${paramName}=${apiKey}`;
+}
+
 export function Map({
   mapState: effectiveMapState,
   sourceId,
@@ -42,7 +64,8 @@ export function Map({
     state.customSources[sourceId] ||
     MAP_SOURCES[sourceId] ||
     GOOGLE_SOURCES[sourceId] ||
-    RADAR_SOURCES[sourceId]
+    RADAR_SOURCES[sourceId] ||
+    STADIA_SOURCES[sourceId];
 
   if (!source) {
     return (
@@ -228,7 +251,22 @@ export function Map({
     );
   }
 
+  // Handle vector source
   if (source.type === "vector") {
+    if (source.apiKeyRequired) {
+      const apiKey = state.apiKeys?.[source.apiKeyRequired.key];
+
+      if (!apiKey) {
+        return (
+          <div className="flex items-center justify-center w-full h-full">
+            {source.apiKeyRequired.key} API key is required
+          </div>
+        );
+      }
+    }
+
+    const styleUrl = getStyleUrlWithApiKey(source, state.apiKeys);
+
     return (
       <div className="relative w-full h-full">
         <MapGL
@@ -239,7 +277,7 @@ export function Map({
           {...effectiveMapState}
           longitude={effectiveMapState.center[0]}
           latitude={effectiveMapState.center[1]}
-          mapStyle={source.style}
+          mapStyle={styleUrl}
         >
           {source.overlays?.map((overlay) => (
             <Source

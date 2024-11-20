@@ -34,8 +34,8 @@ export const RADAR_SOURCES: Record<string, MapSource> = {
     name: "Radar Maps",
     type: "radar",
     mapType: "roadmap",
-    url: "https://api.radar.io/maps/styles/radar-default-v1"
-  }
+    url: "https://api.radar.io/maps/styles/radar-default-v1",
+  },
 } as const;
 
 const VELOMAPA_BASEMAP_KEY = "veloplanner_basemap";
@@ -75,6 +75,18 @@ export const MAP_SOURCES: Record<string, MapSource> = {
     type: "raster",
     url: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
     attribution: "© OpenStreetMap contributors",
+  },
+} as const;
+
+export const STADIA_SOURCES: Record<string, MapSource> = {
+  stadiaAlidade: {
+    id: "stadiaAlidade",
+    name: "Stadia Alidade Smooth",
+    type: "vector",
+    style: "https://tiles.stadiamaps.com/styles/alidade_smooth.json",
+    apiKeyRequired: {
+      key: "stadiaMaps",
+    },
   },
 } as const;
 

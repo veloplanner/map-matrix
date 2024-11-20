@@ -1,4 +1,9 @@
-import { MAP_SOURCES, GOOGLE_SOURCES, RADAR_SOURCES } from "../constants/mapSources";
+import {
+  MAP_SOURCES,
+  GOOGLE_SOURCES,
+  RADAR_SOURCES,
+  STADIA_SOURCES,
+} from "../constants/mapSources";
 import { useApp } from "../contexts/AppContext";
 
 interface SourceSelectorProps {
@@ -13,6 +18,7 @@ export function SourceSelector({
   const { state, dispatch } = useApp();
   const isGoogleMapsKeyMissing = !state.apiKeys?.googleMaps;
   const isRadarMapsKeyMissing = !state.apiKeys?.radarMaps;
+  const isStadiaMapsKeyMissing = !state.apiKeys?.stadiaMaps;
 
   return (
     <div className="flex items-center gap-2">
@@ -74,6 +80,24 @@ export function SourceSelector({
               key={source.id}
               value={source.id}
               disabled={isRadarMapsKeyMissing}
+            >
+              {source.name}
+            </option>
+          ))}
+        </optgroup>
+
+        <optgroup
+          label={
+            isStadiaMapsKeyMissing
+              ? "Stadia Maps (add key to select)"
+              : "Stadia Maps"
+          }
+        >
+          {Object.values(STADIA_SOURCES).map((source) => (
+            <option
+              key={source.id}
+              value={source.id}
+              disabled={isStadiaMapsKeyMissing}
             >
               {source.name}
             </option>

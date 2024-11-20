@@ -5,6 +5,7 @@ export type BoxCount = 1 | 2 | 3 | 4 | 5 | 6;
 export interface ApiKeys {
   googleMaps?: string;
   radarMaps?: string;
+  stadiaMaps?: string;
 }
 
 export interface AppState {
@@ -33,7 +34,11 @@ export interface MapState {
   pitch: number;
 }
 
-export type MapSource = VectorSource | RasterSource | GoogleMapsSource | RadarMapsSource;
+export type MapSource =
+  | VectorSource
+  | RasterSource
+  | GoogleMapsSource
+  | RadarMapsSource;
 export type CustomMapSource = VectorSource | RasterSource;
 
 export interface VectorSource {
@@ -41,6 +46,10 @@ export interface VectorSource {
   name: string;
   type: "vector";
   style: string;
+  apiKeyRequired?: {
+    key: keyof ApiKeys; // This will be 'stadiaMaps', 'radarMaps', etc.
+    urlParam?: string; // Optional parameter name, defaults to 'api_key'
+  };
   overlays?: {
     sourceId: string;
     url: string;
