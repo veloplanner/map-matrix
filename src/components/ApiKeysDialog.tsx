@@ -15,9 +15,6 @@ export function ApiKeysDialog({ onClose }: ApiKeysDialogProps) {
   const [radarMapsKey, setRadarMapsKey] = useState(
     state.apiKeys?.radarMaps || ""
   );
-  const [stadiaMapsKey, setStadiaMapsKey] = useState(
-    state.apiKeys?.stadiaMaps || ""
-  );
   const { handleOverlayClick } = useModalClose(onClose);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -28,7 +25,6 @@ export function ApiKeysDialog({ onClose }: ApiKeysDialogProps) {
         ...state.apiKeys,
         googleMaps: googleMapsKey,
         radarMaps: radarMapsKey,
-        stadiaMaps: stadiaMapsKey,
       },
     });
     onClose();
@@ -46,7 +42,6 @@ export function ApiKeysDialog({ onClose }: ApiKeysDialogProps) {
       });
       setGoogleMapsKey("");
       setRadarMapsKey("");
-      setStadiaMapsKey("");
     }
   };
 
@@ -80,29 +75,6 @@ export function ApiKeysDialog({ onClose }: ApiKeysDialogProps) {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="relative">
-            <label className="block text-sm font-medium text-gray-700">
-              <a
-                href="https://docs.stadiamaps.com"
-                target="_blank"
-                rel="noreferrer"
-                className="text-link"
-              >
-                Stadia Maps
-              </a>{" "}
-              API Key
-              <input
-                type="password"
-                autoComplete="off"
-                value={stadiaMapsKey}
-                onChange={(e) => setStadiaMapsKey(e.target.value)}
-                className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-2"
-                placeholder="Enter your Stadia Maps API key"
-              />
-            </label>
-            <CopyButton value={stadiaMapsKey} label="Stadia Maps API key" />
-          </div>
-
           <div className="relative">
             <label className="block text-sm font-medium text-gray-700">
               Google Maps API Key

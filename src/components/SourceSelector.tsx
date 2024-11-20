@@ -18,7 +18,6 @@ export function SourceSelector({
   const { state, dispatch } = useApp();
   const isGoogleMapsKeyMissing = !state.apiKeys?.googleMaps;
   const isRadarMapsKeyMissing = !state.apiKeys?.radarMaps;
-  const isStadiaMapsKeyMissing = !state.apiKeys?.stadiaMaps;
 
   return (
     <div className="flex items-center gap-2">
@@ -44,6 +43,14 @@ export function SourceSelector({
 
         <optgroup label="Built-in Sources">
           {Object.values(MAP_SOURCES).map((source) => (
+            <option key={source.id} value={source.id}>
+              {source.name}
+            </option>
+          ))}
+        </optgroup>
+
+        <optgroup label="Stadia Maps">
+          {Object.values(STADIA_SOURCES).map((source) => (
             <option key={source.id} value={source.id}>
               {source.name}
             </option>
@@ -80,24 +87,6 @@ export function SourceSelector({
               key={source.id}
               value={source.id}
               disabled={isRadarMapsKeyMissing}
-            >
-              {source.name}
-            </option>
-          ))}
-        </optgroup>
-
-        <optgroup
-          label={
-            isStadiaMapsKeyMissing
-              ? "Stadia Maps (add key to select)"
-              : "Stadia Maps"
-          }
-        >
-          {Object.values(STADIA_SOURCES).map((source) => (
-            <option
-              key={source.id}
-              value={source.id}
-              disabled={isStadiaMapsKeyMissing}
             >
               {source.name}
             </option>
