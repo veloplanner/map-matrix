@@ -37,14 +37,18 @@ export interface MapState {
 export type MapSource = VectorSource | RasterSource | GoogleMapsSource;
 export type CustomMapSource = VectorSource | RasterSource;
 
-export interface VectorSource {
+interface BaseSource {
   id: string;
   name: string;
+  projectUrl?: string; // Optional URL to project homepage/documentation
+}
+
+export interface VectorSource extends BaseSource {
   type: "vector";
   style: string;
   apiKeyRequired?: {
-    key: keyof ApiKeys; // This will be 'stadiaMaps', 'radarMaps', etc.
-    urlParam?: string; // Optional parameter name, defaults to 'api_key'
+    key: keyof ApiKeys;
+    urlParam?: string;
   };
   overlays?: {
     sourceId: string;
@@ -53,18 +57,14 @@ export interface VectorSource {
   }[];
 }
 
-export interface RasterSource {
-  id: string;
-  name: string;
+export interface RasterSource extends BaseSource {
   type: "raster";
   url: string;
   overlayUrls?: string[];
   attribution: string;
 }
 
-export interface GoogleMapsSource {
-  id: string;
-  name: string;
+export interface GoogleMapsSource extends BaseSource {
   type: "google";
   mapType: "roadmap" | "satellite" | "hybrid" | "terrain";
 }

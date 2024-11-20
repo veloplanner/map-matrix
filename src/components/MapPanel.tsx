@@ -3,6 +3,12 @@ import { Map } from "./Map";
 import { Panel, MapState } from "../types";
 import { SourceSelector } from "./SourceSelector";
 import { useRef, useState, useEffect } from "react";
+import {
+  MAP_SOURCES,
+  GOOGLE_SOURCES,
+  RADAR_SOURCES,
+  STADIA_SOURCES,
+} from "../constants/mapSources";
 
 interface MapPanelProps {
   panel: Panel;
@@ -19,6 +25,13 @@ export function MapPanel({ panel, className }: MapPanelProps) {
   const effectiveMapState = panel.synchronized
     ? state.mapState
     : panel.localMapState ?? state.mapState;
+
+  const source =
+    state.customSources[panel.sourceId] ||
+    MAP_SOURCES[panel.sourceId] ||
+    GOOGLE_SOURCES[panel.sourceId] ||
+    RADAR_SOURCES[panel.sourceId] ||
+    STADIA_SOURCES[panel.sourceId];
 
   function handleMapChange(changes: Partial<typeof state.mapState>) {
     if (panel.synchronized) {
@@ -74,7 +87,35 @@ export function MapPanel({ panel, className }: MapPanelProps) {
     >
       <div className="p-2 md:p-3 border-b border-slate-200 space-y-2">
         <div className="flex items-center justify-between gap-2">
-          <SourceSelector panelId={panel.id} currentSourceId={panel.sourceId} />
+          <div className="flex items-center gap-2">
+            <SourceSelector
+              panelId={panel.id}
+              currentSourceId={panel.sourceId}
+            />
+            {source?.projectUrl && (
+              <a
+                href={source.projectUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-1 rounded hover:bg-slate-100"
+                title="View project documentation"
+              >
+                <svg
+                  className="w-4 h-4 text-slate-500"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                  />
+                </svg>
+              </a>
+            )}
+          </div>
           <div className="flex items-center gap-2">
             {isFullscreenSupported && (
               <button

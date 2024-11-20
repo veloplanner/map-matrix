@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useModalClose } from "../hooks/useModalClose";
 import { useApp } from "../contexts/AppContext";
 import { CopyButton } from "./CopyButton";
+import { GOOGLE_PROJECT_URL, RADAR_PROJECT_URL } from "../constants/mapSources";
 
 interface ApiKeysDialogProps {
   onClose: () => void;
@@ -77,7 +78,15 @@ export function ApiKeysDialog({ onClose }: ApiKeysDialogProps) {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="relative">
             <label className="block text-sm font-medium text-gray-700">
-              Google Maps API Key
+              <a
+                href={GOOGLE_PROJECT_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="text-link"
+              >
+                Google Maps
+              </a>{" "}
+              API Key
               <input
                 type="password"
                 autoComplete="off"
@@ -93,7 +102,7 @@ export function ApiKeysDialog({ onClose }: ApiKeysDialogProps) {
           <div className="relative">
             <label className="block text-sm font-medium text-gray-700">
               <a
-                href="https://radar.com/documentation/maps/maps"
+                href={RADAR_PROJECT_URL}
                 target="_blank"
                 rel="noreferrer"
                 className="text-link"
