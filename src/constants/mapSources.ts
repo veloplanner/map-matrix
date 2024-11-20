@@ -81,15 +81,38 @@ export const MAP_SOURCES: Record<string, MapSource> = {
   },
 } as const;
 
+const stadiaApiConfig = {
+  key: "stadiaMaps",
+} as const;
+
 export const STADIA_SOURCES: Record<string, MapSource> = {
-  stadiaAlidade: {
-    id: "stadiaAlidade",
-    name: "Stadia Alidade Smooth",
+  stadiaAlidadeSmooth: {
+    id: "stadiaAlidadeSmooth",
+    name: "Alidade Smooth",
     type: "vector",
     style: "https://tiles.stadiamaps.com/styles/alidade_smooth.json",
-    apiKeyRequired: {
-      key: "stadiaMaps",
-    },
+    apiKeyRequired: stadiaApiConfig,
+  },
+  stadiaOsmBright: {
+    id: "stadiaOsmBright",
+    name: "OSM Bright",
+    type: "vector",
+    style: "https://tiles.stadiamaps.com/styles/osm_bright.json",
+    apiKeyRequired: stadiaApiConfig,
+  },
+  stadiaStamenTerrain: {
+    id: "stadiaStamenTerrain",
+    name: "Stamen Terrain",
+    type: "vector",
+    style: "https://tiles.stadiamaps.com/styles/stamen_terrain.json",
+    apiKeyRequired: stadiaApiConfig,
+  },
+  stadiaOutdoors: {
+    id: "stadiaOutdoors",
+    name: "Outdoors",
+    type: "vector",
+    style: "https://tiles.stadiamaps.com/styles/outdoors.json",
+    apiKeyRequired: stadiaApiConfig,
   },
 } as const;
 
