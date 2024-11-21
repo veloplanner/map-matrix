@@ -1,4 +1,4 @@
-# Map Matrix
+# [Map Matrix](https://mapmatrix.veloplanner.com)
 
 <p align="center">
   <img src="https://github.com/veloplanner/map-matrix/blob/main/public/logo_full.png" alt="Map Matrix Logo" width="200"/>
