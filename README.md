@@ -1,7 +1,7 @@
 # Map Matrix
 
 <p align="center">
-  <img src="https://github.com/veloplanner/map-matrix/blob/main/logo_full.png" alt="Map Matrix Logo" width="200"/>
+  <img src="https://github.com/veloplanner/map-matrix/blob/main/public/logo_full.png" alt="Map Matrix Logo" width="200"/>
 </p>
 
 Compare multiple maps side by side. [Live demo](https://mapmatrix.veloplanner.com)
