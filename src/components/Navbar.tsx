@@ -27,7 +27,7 @@ export function Navbar() {
           {/* Title Row (mobile) / Left Section (desktop) */}
           <div className="h-12 md:h-14 px-4 flex items-center justify-between md:justify-start md:gap-4 border-b md:border-b-0 border-slate-100">
             <div className="flex items-center gap-4">
-              <img src="/logo.png" alt="MapMatrix" className="w-6 h-6" />
+              <img src="/logo.png" alt="MapMatrix" className="w-8 h-8" />
               <h1 className="text-lg font-semibold text-slate-900">
                 MapMatrix
               </h1>
