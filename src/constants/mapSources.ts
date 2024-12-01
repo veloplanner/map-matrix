@@ -1,3 +1,4 @@
+import { env } from "../config/env";
 import { MapSource } from "../types";
 import { VELO_ROUTES_OVERLAY } from "./veloRoutesLayers";
 
@@ -131,6 +132,43 @@ export const STADIA_SOURCES: Record<string, MapSource> = {
     type: "vector",
     style: "https://tiles.stadiamaps.com/styles/outdoors.json",
     projectUrl: stadiaProjectUrl,
+  },
+} as const;
+
+const thunderforestProjectUrl = "https://www.thunderforest.com/";
+
+export const THUNDERFOREST_SOURCES: Record<string, MapSource> = {
+  thunderforestLandscape: {
+    id: "thunderforestLandscape",
+    name: "Thunderforest Landscape",
+    type: "raster",
+    url: `https://tile.thunderforest.com/landscape/{z}/{x}/{y}.png?apikey=${env.thunderforestApiKey}`,
+    attribution: "© OpenStreetMap contributors; © Thunderforest",
+    projectUrl: thunderforestProjectUrl,
+  },
+  thunderforestOpenCycleMap: {
+    id: "thunderforestOpenCycleMap",
+    name: "Thunderforest OpenCycleMap",
+    type: "raster",
+    url: `https://tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=${env.thunderforestApiKey}`,
+    attribution: "© OpenStreetMap contributors; © Thunderforest",
+    projectUrl: thunderforestProjectUrl,
+  },
+  thunderforestOutdoors: {
+    id: "thunderforestOutdoors",
+    name: "Thunderforest Outdoors",
+    type: "raster",
+    url: `https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=${env.thunderforestApiKey}`,
+    attribution: "© OpenStreetMap contributors; © Thunderforest",
+    projectUrl: thunderforestProjectUrl,
+  },
+  thunderforestAtlas: {
+    id: "thunderforestAtlas",
+    name: "Thunderforest Atlas",
+    type: "raster",
+    url: `https://tile.thunderforest.com/atlas/{z}/{x}/{y}.png?apikey=${env.thunderforestApiKey}`,
+    attribution: "© OpenStreetMap contributors; © Thunderforest",
+    projectUrl: thunderforestProjectUrl,
   },
 } as const;
 

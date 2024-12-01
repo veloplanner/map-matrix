@@ -8,6 +8,7 @@ import {
   GOOGLE_SOURCES,
   RADAR_SOURCES,
   STADIA_SOURCES,
+  THUNDERFOREST_SOURCES,
 } from "../constants/mapSources";
 
 interface MapPanelProps {
@@ -31,7 +32,8 @@ export function MapPanel({ panel, className }: MapPanelProps) {
     MAP_SOURCES[panel.sourceId] ||
     GOOGLE_SOURCES[panel.sourceId] ||
     RADAR_SOURCES[panel.sourceId] ||
-    STADIA_SOURCES[panel.sourceId];
+    STADIA_SOURCES[panel.sourceId] ||
+    THUNDERFOREST_SOURCES[panel.sourceId];
 
   function handleMapChange(changes: Partial<typeof state.mapState>) {
     if (panel.synchronized) {

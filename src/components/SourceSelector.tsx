@@ -3,6 +3,7 @@ import {
   GOOGLE_SOURCES,
   RADAR_SOURCES,
   STADIA_SOURCES,
+  THUNDERFOREST_SOURCES,
 } from "../constants/mapSources";
 import { useApp } from "../contexts/AppContext";
 
@@ -48,6 +49,14 @@ export function SourceSelector({
 
       <optgroup label="Stadia Maps">
         {Object.values(STADIA_SOURCES).map((source) => (
+          <option key={source.id} value={source.id}>
+            {source.name}
+          </option>
+        ))}
+      </optgroup>
+
+      <optgroup label="Thunderforest Maps">
+        {Object.values(THUNDERFOREST_SOURCES).map((source) => (
           <option key={source.id} value={source.id}>
             {source.name}
           </option>
